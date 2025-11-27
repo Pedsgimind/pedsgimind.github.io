@@ -2,66 +2,121 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Peds GI Mind – Dr. Mohammad Hussein</title>
+  <title>Peds GI Mind | Pediatric Gastroenterology Clinic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f5f7fb;
-      color: #222;
-    }
-    header {
-      background: #1e4b7a;
-      color: white;
-      padding: 2rem 1.5rem;
-      text-align: center;
-    }
-    main {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 1.5rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-    }
-    h1, h2 {
-      margin-top: 0;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.85rem;
-      color: #555;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <h1>Peds GI Mind</h1>
-    <p>Dr. Mohammad Hussein • Pediatric Gastroenterology & Endoscopy</p>
-  </header>
+<header>
+  <div class="header-inner">
+    <div class="logo-area">
+      <h1>Peds GI Mind</h1>
+      <p>Pediatric Gastroenterology & General Pediatrics Clinic</p>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="conditions.html">Conditions</a></li>
+        <li><a href="education.html">Education</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
 
-  <main>
-    <h2>Website Under Reconstruction</h2>
-    <p>
-      Welcome to Peds GI Mind — the official website of Dr. Mohammad Hussein, Pediatric
-      Gastroenterology & Endoscopy.
-    </p>
-    <p>
-      This website is being rebuilt to provide trusted, family-friendly pediatric GI information,
-      patient education, and clinic resources.
-    </p>
-    <p>
-      <strong>Contact:</strong><br>
-      Email: mohammad.hussein@pedsgimind.ca
-    </p>
-  </main>
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <h2>Specialized Digestive Care for Babies, Children & Teens</h2>
+      <p>
+        Peds GI Mind provides compassionate, evidence-based care for infants, children and adolescents
+        with digestive, liver, nutrition and feeding problems – in a calm, family-centred environment.
+      </p>
 
-  <footer>
-    © <span id="year"></span> Peds GI Mind. All rights reserved.
-    <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
-  </footer>
+      <div class="hero-badges">
+        <span class="badge">Pediatric Gastroenterology</span>
+        <span class="badge">Endoscopy & Colonoscopy</span>
+        <span class="badge">Celiac Disease & IBD</span>
+        <span class="badge">Feeding & Nutrition</span>
+      </div>
+
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="contact.html">Request an Appointment</a>
+        <a class="btn btn-outline" href="education.html">Parent Education Library</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>Clinic at a glance</h3>
+        <ul class="checklist">
+          <li>Consultations for infants, children & teens</li>
+          <li>Endoscopy & colonoscopy for children (where available)</li>
+          <li>Growth, feeding & nutrition support</li>
+          <li>Chronic abdominal pain, constipation, reflux</li>
+          <li>Celiac disease, IBD, liver & pancreatic disease</li>
+        </ul>
+        <p style="margin-top:0.8rem;">
+          <strong>Location:</strong> YOUR_CLINIC_ADDRESS, YOUR_CITY<br>
+          <strong>Phone:</strong> YOUR_PHONE<br>
+          <strong>Email:</strong> mohammad.hussein@pedsgimind.ca
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2>Why families choose Peds GI Mind</h2>
+    <p class="lead">
+      Children are not small adults. They need tailored evaluation, child-friendly procedures and clear
+      communication with parents. Our goal is to make each visit safe, kind and understandable.
+    </p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Subspecialty Expertise</h3>
+        <p>
+          Care provided by a fellowship-trained pediatric gastroenterologist with experience across the full
+          range of digestive, liver and nutrition conditions in children.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Child-Friendly Approach</h3>
+        <p>
+          Explanations at the child’s level, minimal needles and procedures when possible, and close attention
+          to comfort, anxiety and family concerns.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Evidence-Based Medicine</h3>
+        <p>
+          Use of up-to-date North American and European pediatric GI guidelines for diagnosis, treatment
+          and long-term follow-up.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Collaborative Care</h3>
+        <p>
+          Coordination with your child’s pediatrician, family doctor, dietitian and other specialists to
+          make sure everyone is working from the same plan.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>© <span id="year"></span> Peds GI Mind. All rights reserved.</div>
+    <div>For urgent medical concerns, please contact emergency services or your local hospital.</div>
+  </div>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</footer>
 </body>
 </html>

@@ -1,486 +1,257 @@
-/* ----------------------------------------------------
-   Peds GI Mind – Modern Clinic Theme
-   (Replace your entire styles.css with this file)
----------------------------------------------------- */
-
-/* ---- Base + Theme Variables ------------------------------------------- */
-
-:root {
-  --bg-page: #0f172a;
-  --bg-page-soft: #0b1120;
-  --bg-surface: #ffffff;
-  --bg-surface-soft: #f1f5f9;
-
-  --primary: #0f5ddc;
-  --primary-soft: #dbeafe;
-  --primary-deep: #0b3aa8;
-  --accent: #f59e0b;
-
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --border-subtle: #e2e8f0;
-
-  --radius-lg: 20px;
-  --radius-xl: 26px;
-  --shadow-soft: 0 14px 35px rgba(15, 23, 42, 0.22);
-  --shadow-card: 0 12px 30px rgba(15, 23, 42, 0.16);
-
-  --max-width: 1120px;
-}
-
-/* ---- Global Reset ----------------------------------------------------- */
-
-*,
-*::before,
-*::after {
+/* ===========================
+   Global reset & base layout
+   =========================== */
+* {
   box-sizing: border-box;
-}
-
-html,
-body {
   margin: 0;
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  min-height: 100vh;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Segoe UI", sans-serif;
-  color: var(--text-main);
-  background:
-    radial-gradient(circle at top, #1d4ed8 0, transparent 55%),
-    radial-gradient(circle at bottom, #0f172a 0, #020617 65%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+    Helvetica, Arial, sans-serif;
+  background: #f5f7fb;            /* light background for readability */
+  color: #111827;                 /* dark text */
+  line-height: 1.7;
 }
 
-/* A subtle global fade-in */
-body {
-  opacity: 0;
-  animation: fadeInBody 0.4s ease-out forwards;
+/* Put all main content in a centered column */
+body > * {
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
-@keyframes fadeInBody {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* ===========================
+   Top header & navigation
+   (works for all pages)
+   =========================== */
 
-/* ---- Layout Helpers --------------------------------------------------- */
-
-.page-shell {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding-inline: 1.4rem;
-}
-
-.section {
-  padding: 3.2rem 0;
-}
-
-.section + .section {
-  border-top: 1px solid rgba(148, 163, 184, 0.29);
-}
-
-.section-header {
-  margin-bottom: 2rem;
-}
-
-.section-header h2 {
-  font-size: 1.6rem;
-  letter-spacing: 0.02em;
-  margin: 0 0 0.4rem;
-}
-
-.section-header p {
-  margin: 0;
-  color: var(--text-muted);
-  max-width: 44rem;
-}
-
-/* ---- Header / Navigation ---------------------------------------------- */
-
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  background: linear-gradient(to right, #020617d9, #0b1120e6);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
-}
-
-.site-header-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0.85rem 1.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.site-logo-group {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.site-logo-mark {
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 30% 20%, #e0f2fe, #1d4ed8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 0.95rem;
-  color: #0b1120;
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.45);
-}
-
-.site-logo-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.site-logo-text strong {
-  color: #e5f0ff;
+/* Clinic name at very top (first heading or first line) */
+body > h1:first-of-type,
+body > h1 {
+  font-size: 1.9rem;
   font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: 0.03em;
+  margin-top: 1.5rem;
+  margin-bottom: 0.25rem;
+  color: #0f172a;
 }
 
-.site-logo-text span {
-  color: #a5b4fc;
-  font-size: 0.74rem;
+/* Tagline directly under the title (second line / paragraph) */
+body > p:first-of-type {
+  margin-top: 0.15rem;
+  margin-bottom: 1rem;
+  color: #4b5563;
 }
 
-.site-nav {
+/* Main navigation: on most pages it's the first list (Home, About, etc.) */
+body > ul:first-of-type {
+  list-style: none;
   display: flex;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+  padding-left: 0;
 }
 
-.site-nav a {
-  color: #cbd5f5;
-  text-decoration: none;
-  font-size: 0.9rem;
-  padding: 0.35rem 0.7rem;
-  border-radius: 999px;
-  position: relative;
-  transition: color 0.18s, background 0.18s, transform 0.18s;
+/* In case navigation is coded as inline links (About page), this keeps it tidy */
+body > p:nth-of-type(2) a {
+  margin-right: 1rem;
 }
 
-.site-nav a:hover {
-  color: #ffffff;
-  background: rgba(148, 163, 184, 0.18);
-  transform: translateY(-1px);
-}
-
-.site-nav a.active {
-  background: #eff6ff;
+/* Link styling (site-wide) */
+a {
   color: #1d4ed8;
-}
-
-/* Mobile nav wrap */
-@media (max-width: 720px) {
-  .site-header-inner {
-    flex-wrap: wrap;
-    gap: 0.6rem;
-  }
-  .site-nav {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
-
-/* ---- Hero (Home page top banner) -------------------------------------- */
-
-.hero {
-  padding: 3.3rem 0 2.6rem;
-}
-
-.hero-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding-inline: 1.4rem;
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr);
-  gap: 2.6rem;
-  align-items: center;
-}
-
-.hero-text {
-  color: #e5edff;
-}
-
-.hero-tagline {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.18rem 0.7rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(148, 163, 184, 0.45);
-  color: #bfdbfe;
-  font-size: 0.78rem;
-  margin-bottom: 0.9rem;
-}
-
-.hero-tagline span {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: #22c55e;
-}
-
-.hero-text h1 {
-  margin: 0;
-  font-size: clamp(1.9rem, 2.4rem, 2.5rem);
-  letter-spacing: 0.03em;
-}
-
-.hero-text p.lead {
-  max-width: 34rem;
-  margin: 0.9rem 0 1.4rem;
-  color: #cbd5f5;
-  font-size: 0.98rem;
-}
-
-.hero-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 1.4rem;
-}
-
-.hero-chip {
-  padding: 0.25rem 0.7rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.72);
-  border: 1px solid rgba(129, 140, 248, 0.7);
-  color: #e0e7ff;
-  font-size: 0.78rem;
-}
-
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-}
-
-/* ---- Buttons ---------------------------------------------------------- */
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.65rem 1.2rem;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  font-size: 0.9rem;
-  font-weight: 600;
   text-decoration: none;
-  cursor: pointer;
-  transition: background 0.17s ease, color 0.17s ease, transform 0.17s ease,
-    box-shadow 0.17s ease;
+  font-weight: 500;
 }
 
-.btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--primary-deep));
-  color: #ffffff;
-  box-shadow: 0 18px 40px rgba(37, 99, 235, 0.6);
+a:hover,
+a:focus {
+  text-decoration: underline;
+  color: #1e40af;
 }
 
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 22px 50px rgba(37, 99, 235, 0.75);
+/* ===========================
+   Headings & text
+   =========================== */
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.btn-outline {
-  background: transparent;
-  border-color: rgba(191, 219, 254, 0.85);
-  color: #e5edff;
+h2 {
+  font-size: 1.6rem;
+  margin-top: 2rem;
+  margin-bottom: 0.8rem;
 }
 
-.btn-outline:hover {
-  background: rgba(15, 23, 42, 0.6);
+h3 {
+  font-size: 1.25rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.4rem;
 }
 
-/* ---- Hero side card (clinic at a glance) ------------------------------ */
-
-.hero-panel {
-  background: rgba(15, 23, 42, 0.2);
-  border-radius: var(--radius-xl);
-  padding: 0.4rem;
-  border: 1px solid rgba(148, 163, 184, 0.45);
-  box-shadow: var(--shadow-soft);
+p {
+  margin-bottom: 1rem;
+  color: #111827;
 }
 
-.hero-panel-inner {
-  background: var(--bg-surface);
-  border-radius: calc(var(--radius-xl) - 4px);
-  padding: 1.3rem 1.5rem 1.4rem;
-  color: var(--text-main);
+/* Lists */
+ul,
+ol {
+  margin: 0.4rem 0 1.25rem 1.25rem;
 }
 
-.hero-panel h3 {
-  margin-top: 0;
-  margin-bottom: 0.7rem;
-  font-size: 1.05rem;
+/* Slightly tighter list spacing for “bullet heavy” sections */
+li {
+  margin-bottom: 0.2rem;
 }
 
-.hero-panel ul {
-  margin: 0 0 0.8rem;
-  padding-left: 1.1rem;
-  font-size: 0.9rem;
+/* ===========================
+   “Notice” blocks (Home page)
+   =========================== */
+
+body > p:nth-of-type(2),
+body > p:nth-of-type(3),
+body > p:nth-of-type(4) {
+  /* These correspond to the Important Notice lines on index.html */
+  background: #fef3c7;              /* soft amber */
+  border: 1px solid #facc15;
+  color: #713f12;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
-.hero-panel li + li {
-  margin-top: 0.22rem;
-}
-
-.hero-panel p {
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-.hero-panel strong {
+body > p:nth-of-type(2) {
+  margin-top: 0.5rem;
   font-weight: 600;
 }
 
-/* ---- Generic Cards + Grid --------------------------------------------- */
+/* ===========================
+   Card-like blocks for sections
+   (works across pages: services,
+   conditions, education, etc.)
+   =========================== */
 
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 1.4rem;
+/* Any subsection starting with h3 followed by a paragraph or list becomes a “card” */
+h3 + p,
+h3 + ul,
+h3 + ol {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+  margin-top: 0.5rem;
 }
 
-.card {
-  background: var(--bg-surface);
-  border-radius: var(--radius-lg);
-  padding: 1.3rem 1.35rem 1.25rem;
-  box-shadow: var(--shadow-card);
-  border: 1px solid rgba(148, 163, 184, 0.23);
+/* If there is a paragraph immediately after that card, tuck it inside visually */
+h3 + p + p {
+  margin-top: 0.75rem;
 }
 
-.card h3 {
-  margin: 0 0 0.4rem;
-  font-size: 1.02rem;
+/* Main “Clinic at a glance” list is a bit denser for readability */
+h3 + ul li {
+  margin-bottom: 0.3rem;
 }
 
-.card p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--text-muted);
+/* ===========================
+   Buttons on the home page
+   (Request an Appointment, Parent
+   Education Library)
+   =========================== */
+
+a[href*="appointment"],
+a[href*="Appointment"],
+a[href*="Parent Education"] {
+  display: inline-block;
+  padding: 0.65rem 1.4rem;
+  margin: 1rem 0.4rem 1.5rem 0;
+  border-radius: 999px;
+  background: #1d4ed8;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
 }
 
-.card ul {
-  margin: 0.5rem 0 0;
-  padding-left: 1.1rem;
-  font-size: 0.9rem;
-  color: var(--text-muted);
+a[href*="appointment"]:hover,
+a[href*="Appointment"]:hover,
+a[href*="Parent Education"]:hover {
+  background: #1e40af;
 }
 
-.card li + li {
-  margin-top: 0.2rem;
+/* ===========================
+   “Why families choose”
+   and other descriptive sections
+   =========================== */
+
+h2 + p {
+  margin-bottom: 1.5rem;
+  color: #374151;
 }
 
-/* ---- Text blocks ------------------------------------------------------ */
-
-.lead {
-  font-size: 0.98rem;
-  color: var(--text-muted);
+/* Make the “Why families choose Peds GI Mind” intro paragraph softer */
+h2:contains("Why families choose") + p {
+  font-style: italic;
 }
 
-/* About / conditions / education pages use .two-column, .info-grid, etc. */
+/* :contains is not widely supported; ignore gracefully if browser skips it */
 
-.two-column {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  gap: 1.5rem;
-}
+/* ===========================
+   Footer text (last 1–2 paragraphs)
+   =========================== */
 
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.4rem;
-}
-
-/* ---- Education page – note block ------------------------------------- */
-
-.note {
+body > p:last-of-type,
+body > p:nth-last-of-type(2) {
+  font-size: 0.85rem;
+  color: #6b7280;
   margin-top: 2rem;
-  font-size: 0.83rem;
-  color: var(--text-muted);
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
 }
 
-/* ---- Contact page ----------------------------------------------------- */
-
-.contact-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: 1.6rem;
-}
-
-.contact-box {
-  background: var(--bg-surface);
-  border-radius: var(--radius-lg);
-  padding: 1.4rem 1.5rem;
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  box-shadow: var(--shadow-card);
-}
-
-/* ---- Footer ----------------------------------------------------------- */
-
-.site-footer {
-  margin-top: 3rem;
-  background: #020617;
-  color: #94a3b8;
-  font-size: 0.82rem;
-}
-
-.site-footer-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 1.2rem 1.4rem 1.6rem;
-}
-
-.site-footer-inner p {
-  margin: 0.2rem 0;
-}
-
-/* ---- Responsive Tweaks ------------------------------------------------ */
-
-@media (max-width: 900px) {
-  .hero-inner {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .hero-panel {
-    order: -1;
-  }
-}
+/* ===========================
+   Responsive tweaks
+   =========================== */
 
 @media (max-width: 640px) {
-  .section {
-    padding: 2.4rem 0;
+  body > * {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
-  .cards-grid {
-    gap: 1.1rem;
+  body > ul:first-of-type {
+    gap: 0.75rem;
   }
 
-  .card {
-    padding: 1.1rem 1.15rem 1.05rem;
+  h1 {
+    font-size: 1.6rem;
   }
 
-  .hero-actions {
-    flex-direction: column;
-    align-items: stretch;
+  h2 {
+    font-size: 1.35rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  h3 + p,
+  h3 + ul,
+  h3 + ol {
+    padding: 1rem 1.1rem;
   }
 }

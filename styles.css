@@ -270,3 +270,23 @@ footer .container {
 .notice-banner strong {
     color: #4a2700;
 }
+.about-photo-float {
+  width: 260px;
+  max-width: 42vw;
+  height: auto;
+  float: right;
+  margin: 0.25rem 0 1rem 1.25rem;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+/* On smaller screens, stop floating and center it */
+@media (max-width: 900px) {
+  .about-photo-float {
+    float: none;
+    display: block;
+    margin: 0 auto 1rem auto;
+    width: 220px;
+    max-width: 70vw;
+  }
+}

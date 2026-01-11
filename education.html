@@ -1,102 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Parent Education | Peds GI Mind</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Education | Ibn al-Nafis Gastroenterology</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* Page background matches your site feel */
+    .edu-main{
+      background:#f5f7fb;
+    }
+
+    .edu-hero{
+      padding:3rem 0 1.8rem;
+    }
+
+    .edu-hero-inner{
+      background:#ffffff;
+      border-radius:18px;
+      padding:2.5rem 2.5rem 2rem;
+      box-shadow:0 18px 40px rgba(15,23,42,0.08);
+    }
+
+    .edu-hero h1{
+      font-size:2.1rem;
+      margin-bottom:0.7rem;
+    }
+
+    .edu-hero p{
+      max-width:820px;
+      color:#4b5563;
+      line-height:1.7;
+      margin:0;
+    }
+
+    .edu-section{
+      padding:0 0 3.5rem;
+    }
+
+    .edu-groups{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:2rem 2.5rem;
+    }
+
+    .edu-group{
+      background:#ffffff;
+      border-radius:16px;
+      padding:1.8rem 1.7rem 1.5rem;
+      box-shadow:0 14px 32px rgba(15,23,42,0.06);
+      border:1px solid #e5e7eb;
+    }
+
+    .edu-group h2{
+      font-size:1.25rem;
+      margin-bottom:0.4rem;
+      display:flex;
+      align-items:center;
+      gap:0.45rem;
+    }
+
+    .edu-group-icon{
+      font-size:1.25rem;
+    }
+
+    .edu-group p{
+      font-size:0.95rem;
+      color:#374151;
+      line-height:1.6;
+      margin-bottom:0.7rem;
+    }
+
+    .edu-list{
+      list-style:none;
+      margin:0;
+      padding:0;
+      columns:1;
+    }
+
+    .edu-list li{
+      margin-bottom:0.35rem;
+    }
+
+    .edu-list a{
+      font-size:0.94rem;
+      color:#1d4ed8;
+      text-decoration:none;
+    }
+
+    .edu-list a:hover{
+      text-decoration:underline;
+    }
+
+    .edu-note{
+      margin-top:2rem;
+      font-size:0.94rem;
+      color:#4b5563;
+    }
+
+    @media (max-width: 900px){
+      .edu-groups{grid-template-columns:minmax(0,1fr);}
+    }
+
+    @media (max-width: 640px){
+      .edu-hero{padding-top:2.3rem;}
+      .edu-hero-inner{
+        padding-inline:1.5rem;
+        border-radius:0;
+        box-shadow:none;
+      }
+      .edu-section{padding-bottom:2.5rem;}
+    }
+  </style>
 </head>
-<body>
-<header>
-  <div class="header-inner">
-    <div class="logo-area">
-      <a class="brand-link" href="index.html">
-  <img class="site-logo" src="/images/logo.png" alt="Peds GI Mind logo">
-  <div class="brand-text">
-<h1>Ibn al-Nafis Gastroenterology</h1>
-      <p>Pediatric Gastroenterology & General Pediatrics Clinic</p>
-  </div>
-</a>
+
+<body class="site-page">
+  <!-- HEADER (matches your pedsgimind.github.io pages) -->
+  <header>
+    <div class="header-inner">
+      <div class="logo-area">
+        <a class="brand-link" href="index.html">
+          <img class="site-logo" src="/images/logo.png" alt="Clinic logo">
+          <div class="brand-text">
+            <div class="site-title">Ibn al-Nafis Gastroenterology</div>
+            <div class="site-subtitle">Pediatric Gastroenterology &amp; General Pediatrics Clinic</div>
+          </div>
+        </a>
+      </div>
+
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="conditions.html">Conditions</a></li>
+          <li><a href="education.html" class="active">Education</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
     </div>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="services.html">Services</a></li>
-        <li><a href="conditions.html">Conditions</a></li>
-        <li><a href="education.html" class="active">Education</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
+  </header>
 
-<section class="section">
-  <div class="container">
-    <h2>Parent & Patient Education</h2>
+  <main class="edu-main">
+    <!-- HERO -->
+    <section class="section edu-hero">
+      <div class="container">
+        <div class="edu-hero-inner">
+          <h1>Parent &amp; Patient Education</h1>
+          <p>
+            A focused library of patient-friendly educational resources for <strong>General Pediatrics</strong> and
+            <strong>Pediatric Gastroenterology, Hepatology &amp; Nutrition</strong>.
+            Select a topic below to open a clear, easy-to-understand handout.
+          </p>
+        </div>
+      </div>
+    </section>
 
-<div class="card" style="margin-top:1rem;">
-  <h3>Education Library</h3>
-  <p>Browse printable handouts for Pediatrics and Pediatric Gastroenterology.</p>
-  <p><a href="education/index.html">Open the Education Library →</a></p>
-</div>
-    <p class="lead">
-      This section will grow over time to include easy-to-understand guides, videos and handouts about
-      common pediatric GI conditions, procedures and nutrition topics.
-    </p>
+    <!-- EDUCATION GROUPS (PEDS GI + GENERAL PEDS ONLY) -->
+    <section class="section edu-section">
+      <div class="container">
+        <div class="edu-groups">
 
-    <div class="cards">
-      <div class="card">
-        <h3>Celiac Disease in Children</h3>
-        <p>
-          What celiac disease is, symptoms in children, how it is diagnosed and how to follow a strict
-          gluten-free diet in real life.
-        </p>
-        <p style="font-size:0.9rem;">
-          <em>Coming soon:</em> animated videos and printable handouts in English and Arabic.
+          <!-- 1) Pediatric Gastroenterology -->
+          <section class="edu-group" id="peds-gi-edu">
+            <h2><span class="edu-group-icon">👶</span>Pediatric Gastroenterology, Hepatology &amp; Nutrition</h2>
+            <p>Select a topic to open a parent-friendly resource about your child’s condition.</p>
+
+            <ul class="edu-list">
+              <!-- Esophagus & Upper GI -->
+              <li><a href="education-resources/peds-reflux.html">Reflux and heartburn in infants and children</a></li>
+              <li><a href="education-resources/peds-ger.html">Gastroesophageal reflux (GER) in infants</a></li>
+              <li><a href="education-resources/peds-gerd.html">Gastroesophageal reflux disease (GERD) in children</a></li>
+              <li><a href="education-resources/peds-eoe.html">Eosinophilic esophagitis (EoE)</a></li>
+              <li><a href="education-resources/peds-dysphagia.html">Swallowing difficulties (dysphagia)</a></li>
+              <li><a href="education-resources/peds-achalasia.html">Achalasia and esophageal motility problems</a></li>
+              <li><a href="education-resources/peds-esophageal-strictures.html">Esophageal narrowing and strictures</a></li>
+
+              <!-- Stomach & Duodenum -->
+              <li><a href="education-resources/peds-functional-dyspepsia.html">Functional dyspepsia (stomach pain)</a></li>
+              <li><a href="education-resources/peds-gastritis.html">Gastritis</a></li>
+              <li><a href="education-resources/peds-hpylori.html">Helicobacter pylori infection</a></li>
+              <li><a href="education-resources/peds-peptic-ulcer.html">Peptic ulcer disease in children</a></li>
+              <li><a href="education-resources/peds-vomiting.html">Chronic or recurrent vomiting</a></li>
+              <li><a href="education-resources/peds-cyclic-vomiting.html">Cyclic vomiting syndrome</a></li>
+
+              <!-- Small intestine / Malabsorption -->
+              <li><a href="education-resources/peds-celiac-disease.html">Celiac disease</a></li>
+              <li><a href="education-resources/peds-chronic-diarrhea.html">Chronic diarrhea and malabsorption</a></li>
+              <li><a href="education-resources/peds-short-bowel.html">Short bowel syndrome</a></li>
+              <li><a href="education-resources/peds-lactose-intolerance.html">Lactose intolerance</a></li>
+              <li><a href="education-resources/peds-food-protein-allergy.html">Food protein allergy (milk, soy, etc.)</a></li>
+              <li><a href="education-resources/peds-intestinal-infections.html">Intestinal infections and gastroenteritis</a></li>
+
+              <!-- Colon & Functional -->
+              <li><a href="education-resources/peds-constipation.html">Constipation in children</a></li>
+              <li><a href="education-resources/peds-encopresis.html">Soiling and encopresis</a></li>
+              <li><a href="education-resources/peds-ibs.html">Irritable bowel syndrome (IBS) in children</a></li>
+              <li><a href="education-resources/peds-abdominal-pain.html">Chronic or recurrent abdominal pain</a></li>
+              <li><a href="education-resources/peds-rectal-bleeding.html">Rectal bleeding in children</a></li>
+              <li><a href="education-resources/peds-polyps.html">Colon polyps in children</a></li>
+
+              <!-- IBD -->
+              <li><a href="education-resources/peds-ibd.html">Inflammatory bowel disease (Crohn’s &amp; ulcerative colitis)</a></li>
+              <li><a href="education-resources/peds-crohns.html">Crohn’s disease in children</a></li>
+              <li><a href="education-resources/peds-ulcerative-colitis.html">Ulcerative colitis in children</a></li>
+
+              <!-- Liver & Biliary -->
+              <li><a href="education-resources/peds-liver-tests.html">Abnormal liver tests in children</a></li>
+              <li><a href="education-resources/peds-jaundice.html">Jaundice in infants and children</a></li>
+              <li><a href="education-resources/peds-fatty-liver.html">Fatty liver disease in children</a></li>
+              <li><a href="education-resources/peds-autoimmune-hepatitis.html">Autoimmune hepatitis in children</a></li>
+              <li><a href="education-resources/peds-cholestasis.html">Cholestasis and pale stools</a></li>
+              <li><a href="education-resources/peds-biliary-atresia.html">Biliary atresia</a></li>
+
+              <!-- Pancreas -->
+              <li><a href="education-resources/peds-pancreatitis.html">Acute pancreatitis in children</a></li>
+              <li><a href="education-resources/peds-chronic-pancreatitis.html">Chronic pancreatitis in children</a></li>
+
+              <!-- Nutrition & Growth -->
+              <li><a href="education-resources/peds-failure-to-thrive.html">Poor weight gain and “failure to thrive”</a></li>
+              <li><a href="education-resources/peds-obesity.html">Childhood overweight and obesity</a></li>
+              <li><a href="education-resources/peds-feeding-difficulty.html">Feeding difficulties and picky eating</a></li>
+              <li><a href="education-resources/peds-enteral-nutrition.html">Tube feeding and enteral nutrition</a></li>
+              <li><a href="education-resources/peds-tpn.html">Parenteral nutrition (TPN)</a></li>
+
+              <!-- Motility -->
+              <li><a href="education-resources/peds-gastric-emptying.html">Delayed gastric emptying (gastroparesis)</a></li>
+              <li><a href="education-resources/peds-intestinal-motility.html">Intestinal motility disorders</a></li>
+              <li><a href="education-resources/peds-hirschsprung.html">Hirschsprung disease</a></li>
+            </ul>
+          </section>
+
+          <!-- 2) General Pediatrics -->
+          <section class="edu-group" id="general-peds-edu">
+            <h2><span class="edu-group-icon">🧸</span>General Pediatrics</h2>
+            <p>Common childhood conditions and practical health guidance for families.</p>
+            <ul class="edu-list">
+              <li><a href="education-resources/peds-fever.html">Fever in children: when to worry</a></li>
+              <li><a href="education-resources/peds-common-cold.html">Common cold and flu</a></li>
+              <li><a href="education-resources/peds-ear-infections.html">Ear infections (otitis media)</a></li>
+              <li><a href="education-resources/peds-strep-throat.html">Sore throat and tonsillitis</a></li>
+              <li><a href="education-resources/peds-cough-wheeze.html">Cough, wheeze, and bronchiolitis</a></li>
+              <li><a href="education-resources/peds-asthma.html">Asthma</a></li>
+              <li><a href="education-resources/peds-pneumonia.html">Pneumonia</a></li>
+              <li><a href="education-resources/peds-vaccines.html">Vaccines and routine immunizations</a></li>
+              <li><a href="education-resources/peds-growth.html">Growth, weight, and height concerns</a></li>
+              <li><a href="education-resources/peds-anemia.html">Anemia in children</a></li>
+              <li><a href="education-resources/peds-headache.html">Headaches in children</a></li>
+              <li><a href="education-resources/peds-migraine.html">Migraine in children</a></li>
+              <li><a href="education-resources/peds-urine-infection.html">Urinary tract infections</a></li>
+              <li><a href="education-resources/peds-enuresis.html">Bedwetting (nocturnal enuresis)</a></li>
+              <li><a href="education-resources/peds-skin-rashes.html">Common skin rashes in children</a></li>
+              <li><a href="education-resources/peds-allergies.html">Allergies and allergic rhinitis</a></li>
+              <li><a href="education-resources/peds-eczema.html">Eczema in children</a></li>
+              <li><a href="education-resources/peds-sleep.html">Healthy sleep habits</a></li>
+              <li><a href="education-resources/peds-behavior.html">Behavior and attention concerns (ADHD overview)</a></li>
+              <li><a href="education-resources/peds-school-health.html">School health and learning concerns</a></li>
+              <li><a href="education-resources/peds-accident-prevention.html">Accident and injury prevention</a></li>
+            </ul>
+          </section>
+
+        </div>
+
+        <p class="edu-note">
+          These resources are for education only and do not replace a medical consultation.
+          If you have urgent symptoms or concerns, please seek medical attention or contact emergency services.
         </p>
       </div>
+    </section>
+  </main>
 
-      <div class="card">
-        <h3>Constipation & Toilet Training</h3>
-        <p>
-          Understanding constipation, stool withholding and encopresis; how and why we use laxatives;
-          and practical tips for toilet training without shame or punishment.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Endoscopy & Colonoscopy</h3>
-        <p>
-          Step-by-step explanation of what happens before, during and after your child’s procedure,
-          including preparation, anesthesia and recovery.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Nutrition & Growth</h3>
-        <p>
-          How to support healthy growth; when to worry about poor appetite or weight; and how medical
-          nutrition (formulas, supplements, tube feeds) can be used safely when needed.
-        </p>
+  <!-- FOOTER (matches your pedsgimind site style) -->
+  <footer>
+    <div class="container">
+      <div>© <span id="year"></span> Ibn al-Nafis Gastroenterology. All rights reserved.</div>
+      <div>For urgent medical concerns, please contact emergency services or your local hospital.</div>
+      <div style="margin-top:0.35rem;">
+        Email: <a href="mailto:Info@pedsgimind.ca">Info@pedsgimind.ca</a>
       </div>
     </div>
 
-    <p style="margin-top:2rem; font-size:0.9rem;">
-      <strong>Note:</strong> Online information is for education only and does not replace individual medical
-      advice. For specific concerns about your child, please speak with your pediatrician or book a consultation.
-    </p>
-  </div>
-</section>
-
-<footer>
-  <div class="container">
-    <div>© <span id="year"></span> Peds GI Mind. All rights reserved.</div>
-    <div>For urgent medical concerns, please contact emergency services or your local hospital.</div>
-  </div>
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
-</footer>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </footer>
 </body>
 </html>

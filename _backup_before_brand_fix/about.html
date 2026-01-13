@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Dr. Mohammad Hussein | Peds GI Mind</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Page-specific layout tweaks -->
+  <style>
+    .hero-sub {
+      padding: 4rem 0 2.5rem;
+      background: linear-gradient(135deg, #0b458f, #1565c0);
+      color: #ffffff;
+    }
+
+    .hero-sub .lead {
+      max-width: 820px;
+      margin-top: 0.75rem;
+      opacity: 0.95;
+    }
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
+      gap: 2rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 900px) {
+      .about-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .about-main .card + .card {
+      margin-top: 1.5rem;
+    }
+
+    .about-side .card + .card {
+      margin-top: 1.25rem;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.75rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(13, 71, 161, 0.18);
+      background: rgba(227, 242, 253, 0.7);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #0d47a1;
+      white-space: nowrap;
+    }
+
+    .about-small-label {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(0, 0, 0, 0.54);
+      margin-bottom: 0.25rem;
+    }
+
+    .about-list {
+      margin-top: 0.4rem;
+    }
+
+    .about-list li + li {
+      margin-top: 0.25rem;
+    }
+
+    .muted {
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header / Navigation (same as other pages) -->
+  <header class="site-header">
+    <div class="container header-inner">
+      
+      <div class="branding">
+        <a class="brand-link" href="index.html">
+          <img class="site-logo" src="/images/logo.png" alt="Peds GI Mind logo">
+          <div>
+            <div class="site-title">Ibn al-Nafis Gastroenterology</div>
+            <div class="site-subtitle">Pediatric Gastroenterology &amp; General Pediatrics Clinic</div>
+          </div>
+        </a>
+      </div>
+    
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="about.html" class="active">About</a>
+        <a href="services.html">Services</a>
+        <a href="conditions.html">Conditions</a>
+        <a href="education.html">Education</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+  
+    <!-- Hero -->
+    <section class="hero hero-sub">
+           <img
+    class="about-photo-float"
+    src="/images/team/dr-mohammad-hussein.jpg"
+    alt="Dr. Mohammad Hussein"
+    loading="eager"
+    decoding="async"
+  /> 
+      <div class="container">
+        <h1>Dr. Mohammad Hussein,MD, FRCPC (Pediatrics& Pediatric Gastroenterology)</h1>
+         
+
+        <p class="lead">
+          Dr. Mohammad Hussein is a Board Certified in General Pediatric and Pediatric Gastroenterology by the Royal College of Physicians and Surgeons of Canada&ndash; RCPSC with fellowship training in
+          pediatric gastroenterology, hepatology and nutrition. He cares for infants, children and adolescents
+          with digestive, liver, feeding and nutrition problems, with a calm, family-centred and
+          trauma-informed approach.
+        </p>
+        
+    
+        
+        <div class="pill-row">
+          <span class="pill">FRCPC &mdash; Pediatrics (Canada)</span>
+           <span class="pill">FRCPC &mdash; Pediatric Gastroenterology (Canada)</span>
+          <span class="pill">LMCC &mdash; Licentiate of the Medical Council of Canada</span>
+          
+        </div>
+      </div>
+    </section>
+
+    <!-- Main About Layout -->
+    <section class="section">
+      <div class="container about-layout">
+        <!-- Left column: Narrative & practice style -->
+        <div class="about-main">
+          <div class="card">
+            <h2>Clinical profile</h2>
+         
+            <p>
+              Dr. Hussein has experience managing a broad spectrum of pediatric gastrointestinal and
+              hepatobiliary conditions, including inflammatory bowel disease, celiac disease, intestinal
+              lymphangiectasia, complex constipation and fecal incontinence, reflux and vomiting syndromes,
+              and acute and chronic GI bleeding.
+            </p>
+            <p>
+              His practice is strongly shaped by the interface between gut health, nutrition and
+              neurodevelopment. He has particular interest in feeding difficulties, selective and restrictive
+              eating, obesity and metabolic risk, and gastrointestinal issues in children with
+              neurodevelopmental conditions, including Autism Spectrum Disorder.
+            </p>
+            <p>
+              Dr. Hussein aims to provide care that is technically sound and evidence-based, but also
+              practical and compassionate. Each visit emphasizes clear explanations, shared decision-making
+              with families and attention to how chronic GI symptoms affect growth, development, schooling
+              and quality of life.
+            </p>
+          </div>
+
+          <div class="card">
+            <h2>Training &amp; certification</h2>
+            <div class="about-small-label">Medical &amp; pediatric training</div>
+            <ul class="about-list">
+              <li>MBChB &mdash; Baghdad College of Medicine, University of Baghdad, Iraq</li>
+              <li>Pediatrics Residency &mdash; Children&rsquo;s Hospital, Western University, London, Ontario, Canada</li>
+              <li>Fellowship &mdash; Pediatric Gastroenterology, Hepatology &amp; Nutrition, McMaster Children&rsquo;s Hospital, Hamilton, Ontario, Canada</li>
+            </ul>
+
+            <div class="about-small-label" style="margin-top: 0.9rem;">Professional certifications</div>
+            <ul class="about-list">
+              
+              <li>FRCPC &mdash; Pediatrics, Royal College of Physicians &amp; Surgeons of Canada</li>
+              
+              <li>FRCPC &mdash; Pediatric Gastroenterology, Royal College of Physicians &amp; Surgeons of Canada</li>
+              
+              <li>Licentiate of the Medical Council of Canada (LMCC)</li>
+              
+            </ul>
+
+            <div class="about-small-label" style="margin-top: 0.9rem;">Additional procedural training</div>
+            <ul class="about-list">
+              <li>Liver biopsy with ultrasound guidance (Menghini and Tru-Cut techniques)</li>
+              <li>Video capsule endoscopy</li>
+              <li>pH and dual pH-impedance studies</li>
+              <li>Hydrogen and methane breath testing</li>
+              <li>Anorectal manometry</li>
+              <li>Diagnostic and therapeutic upper endoscopy and colonoscopy, including PEG and PEC procedures</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h2>Teaching &amp; philosophy of care</h2>
+            <p>
+              Dr. Hussein has been involved in teaching pediatric residents, fellows and medical students in
+              Canada and the Gulf region. He has supervised formal case forums, helped lead examination-focused
+              teaching, and developed innovative formats such as podcast-based case discussions.
+            </p>
+            <ul class="about-list">
+              <li>Regular supervision of case forums and journal clubs for pediatric trainees</li>
+              <li>Experience designing structured teaching for board-oriented review</li>
+              <li>Active involvement in quality-improvement and retrospective research projects</li>
+            </ul>
+            <p class="muted" style="margin-top: 0.75rem;">
+              His guiding principles are simple: listen carefully, explain clearly, involve families as partners
+              and treat every child with dignity, patience and respect.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right column: Focus areas & background -->
+        <aside class="about-side">
+          <div class="card">
+            <h2>Clinical focus areas</h2>
+            <ul class="about-list">
+              <li>Inflammatory bowel disease (ulcerative colitis, Crohn disease, very early-onset IBD)</li>
+              <li>Celiac disease, intestinal lymphangiectasia and malabsorption disorders</li>
+              <li>Functional and motility problems &mdash; chronic abdominal pain, constipation, fecal incontinence, reflux and vomiting syndromes</li>
+              <li>Feeding difficulties, restrictive eating and nutrition support</li>
+              <li>Obesity and cardiometabolic risk in children and adolescents</li>
+              <li>GI and nutritional issues in children with neurodevelopmental conditions</li>
+              <li>Endoscopic management of foreign body ingestion and GI bleeding in children</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h2>Practice background</h2>
+            <p>
+              Dr. Hussein has practiced in a variety of settings, including tertiary children&rsquo;s hospitals,
+              regional centres and community clinics, as well as military and overseas environments.
+            </p>
+            <ul class="about-list">
+              <li>Experience in community pediatric and pediatric GI practice in Canada</li>
+              <li>Consultant pediatric GI roles in the Gulf region</li>
+              <li>Current overseas pediatric and pediatric GI practice, with ongoing academic and teaching involvement</li>
+              <li>Active participation in retrospective studies and quality-improvement initiatives in pediatric gastroenterology and general pediatrics</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h2>Languages</h2>
+            <ul class="about-list">
+              <li>Arabic &mdash; fluent</li>
+              <li>English &mdash; fluent</li>
+              <li>Turkish &mdash; intermediate</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (same as other pages) -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2025 Peds GI Mind. All rights reserved.</p>
+      <p class="muted">
+        This site is for general information only and does not provide individual medical advice. 
+        For urgent concerns, please contact emergency services or your local hospital.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contact & Location | Peds GI Mind</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="logo-area">
+        <a class="brand-link" href="index.html">
+          <img class="site-logo" src="/images/logo.png" alt="Peds GI Mind logo" />
+          <div class="brand-text">
+            <h1>Peds GI Mind</h1>
+            <p>Pediatric Gastroenterology &amp; General Pediatrics Clinic</p>
+          </div>
+        </a>
+      </div>
+
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="conditions.html">Conditions</a></li>
+          <li><a href="education.html">Education</a></li>
+          <li><a href="contact.html" class="active">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <h2>Contact &amp; Location</h2>
+      <p class="lead">
+        Please note that email is not monitored 24/7 and should not be used for emergencies.
+        For urgent concerns, contact your local emergency department or on-call service.
+      </p>
+
+      <div class="contact-block">
+        <div class="contact-details">
+          <h3>Clinic Details</h3>
+
+          <p><strong>Clinic Name:</strong> Peds GI Mind – Pediatric Gastroenterology Clinic</p>
+
+          <!-- Hidden until confirmed: leave value as TBC to keep hidden -->
+          <p class="only-if-filled" data-value="TBC"><strong>Address:</strong> TBC</p>
+          <p class="only-if-filled" data-value="TBC"><strong>Phone:</strong> TBC</p>
+          <p class="only-if-filled" data-value="TBC"><strong>Fax:</strong> TBC</p>
+
+          <p><strong>Email:</strong> <a href="mailto:Info@pedsgimind.ca">Info@pedsgimind.ca</a></p>
+
+          <h3 style="margin-top: 1.5rem;">Referral Information</h3>
+          <p>
+            Referrals from pediatricians, family physicians and other specialists are welcome.
+            Please include growth charts, relevant laboratory and imaging results, and any previous
+            endoscopy reports when available.
+          </p>
+        </div>
+
+        <div>
+          <div class="card">
+            <h3>Book Online Appointment</h3>
+
+            <p><strong>To book an online assessment:</strong></p>
+            <p>
+              Email Dr. Hussein’s Assistant, Elizabeth Gray:
+              <a href="mailto:Elizabeth.Gray@pedsgimind.ca">Elizabeth.Gray@pedsgimind.ca</a>
+            </p>
+
+            <p><strong>In the email subject, please write:</strong><br />
+              New Assessment Appointment with Dr. Hussein
+            </p>
+
+            <p><strong>Important:</strong>
+              This appointment is completely online as Dr. Hussein is currently working overseas.
+              This service is not covered by OHIP.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div>© <span id="year"></span> Peds GI Mind. All rights reserved.</div>
+      <div>For urgent medical concerns, please contact emergency services or your local hospital.</div>
+    </div>
+
+    <script>
+      // Year
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      // Hide "TBC" fields automatically
+      document.querySelectorAll(".only-if-filled").forEach((el) => {
+        const v = (el.getAttribute("data-value") || "").trim().toLowerCase();
+        if (!v || v === "tbc" || v === "to be confirmed" || v === "pending") {
+          el.style.display = "none";
+        }
+      });
+    </script>
+  </footer>
+</body>
+</html>

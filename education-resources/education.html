@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Education | Ibn al-Nafis Gastroenterology</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .edu-main { background: #f5f7fb; }
+    .edu-hero { padding: 3rem 0 1.8rem; }
+    .edu-hero-inner {
+      background: #ffffff; border-radius: 18px; padding: 2.5rem 2.5rem 2rem;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08); border: 1px solid #e5e7eb;
+    }
+    .edu-hero h1 { font-size: 2.1rem; margin-bottom: 0.7rem; }
+    .edu-hero p { max-width: 860px; color: #4b5563; line-height: 1.7; }
+    .edu-section { padding: 0 0 3.5rem; }
+    .edu-groups {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem 2.5rem;
+    }
+    .edu-group {
+      background: #ffffff; border-radius: 16px; padding: 1.8rem 1.7rem 1.5rem;
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.06); border: 1px solid #e5e7eb;
+    }
+    .edu-group h2 {
+      font-size: 1.25rem; margin-bottom: 0.4rem; display: flex;
+      align-items: center; gap: 0.45rem;
+    }
+    .edu-group-icon { font-size: 1.25rem; }
+    .edu-group p { font-size: 0.95rem; color: #374151; line-height: 1.6; margin-bottom: 0.7rem; }
+    .edu-list { list-style: none; margin: 0; padding: 0; }
+    .edu-list li { margin-bottom: 0.3rem; }
+    .edu-list a { font-size: 0.92rem; color: #1d4ed8; text-decoration: none; }
+    .edu-list a:hover { text-decoration: underline; }
+    .edu-note { margin-top: 2rem; font-size: 0.94rem; color: #4b5563; }
+
+    /* Make long lists easier to scroll on desktop while staying clean on mobile */
+    .edu-list-wrap {
+      max-height: 64vh;
+      overflow: auto;
+      padding-right: 0.35rem;
+    }
+    .edu-list-wrap::-webkit-scrollbar { width: 10px; }
+    .edu-list-wrap::-webkit-scrollbar-thumb { background: rgba(17,24,39,0.18); border-radius: 999px; }
+
+    @media (max-width: 900px) {
+      .edu-groups { grid-template-columns: minmax(0, 1fr); }
+      .edu-list-wrap { max-height: none; overflow: visible; padding-right: 0; }
+    }
+    @media (max-width: 640px) {
+      .edu-hero { padding-top: 2.3rem; }
+      .edu-hero-inner { padding-inline: 1.5rem; border-radius: 0; box-shadow: none; }
+      .edu-section { padding-bottom: 2.5rem; }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo-area">
+      <a class="brand-link" href="index.html">
+        <img class="site-logo" src="/images/logo.png" alt="Ibn al-Nafis Gastroenterology logo">
+        <div class="brand-text">
+          <div class="site-title">Ibn al-Nafis Gastroenterology</div>
+          <div class="site-subtitle">Pediatric Gastroenterology &amp; General Pediatrics Clinic</div>
+        </div>
+      </a>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="conditions.html">Conditions</a></li>
+        <li><a href="education.html" class="active">Education</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="edu-main">
+  <section class="edu-hero">
+    <div class="container">
+      <div class="edu-hero-inner">
+        <h1>Parent &amp; Patient Education</h1>
+        <p>
+          A focused library of patient-friendly educational resources for General Pediatrics and Pediatric Gastroenterology, Hepatology &amp; Nutrition.
+          Select a topic below to open a clear, easy-to-understand handout.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="edu-section">
+    <div class="container">
+      <div class="edu-groups">
+
+        <section class="edu-group" id="peds-gi-edu">
+          <h2><span class="edu-group-icon">👶</span>Pediatric Gastroenterology, Hepatology &amp; Nutrition</h2>
+          <p>Select a topic to open a parent-friendly resource about your child’s condition.</p>
+          <div class="edu-list-wrap">
+            <ul class="edu-list">
+              <li><a href="education-resources/reflux-and-heartburn-in-infants-and-children.html">Reflux and heartburn in infants and children</a></li>
+              <li><a href="education-resources/gastroesophageal-reflux-in-infants.html">Gastroesophageal reflux (GER) in infants</a></li>
+              <li><a href="education-resources/gastroesophageal-reflux-disease-in-children.html">Gastroesophageal reflux disease (GERD) in children</a></li>
+              <li><a href="education-resources/eosinophilic-esophagitis.html">Eosinophilic esophagitis (EoE)</a></li>
+              <li><a href="education-resources/swallowing-difficulties.html">Swallowing difficulties (dysphagia)</a></li>
+              <li><a href="education-resources/achalasia-and-esophageal-motility-problems.html">Achalasia and esophageal motility problems</a></li>
+              <li><a href="education-resources/esophageal-narrowing-and-strictures.html">Esophageal narrowing and strictures</a></li>
+              <li><a href="education-resources/functional-dyspepsia.html">Functional dyspepsia (stomach pain)</a></li>
+              <li><a href="education-resources/gastritis.html">Gastritis</a></li>
+              <li><a href="education-resources/helicobacter-pylori-infection.html">Helicobacter pylori infection</a></li>
+              <li><a href="education-resources/peptic-ulcer-disease-in-children.html">Peptic ulcer disease in children</a></li>
+              <li><a href="education-resources/chronic-or-recurrent-vomiting.html">Chronic or recurrent vomiting</a></li>
+              <li><a href="education-resources/cyclic-vomiting-syndrome.html">Cyclic vomiting syndrome</a></li>
+              <li><a href="education-resources/celiac-disease.html">Celiac disease</a></li>
+              <li><a href="education-resources/chronic-diarrhea-and-malabsorption.html">Chronic diarrhea and malabsorption</a></li>
+              <li><a href="education-resources/short-bowel-syndrome.html">Short bowel syndrome</a></li>
+              <li><a href="education-resources/lactose-intolerance.html">Lactose intolerance</a></li>
+              <li><a href="education-resources/food-protein-allergy.html">Food protein allergy (milk, soy, etc.)</a></li>
+              <li><a href="education-resources/intestinal-infections-and-gastroenteritis.html">Intestinal infections and gastroenteritis</a></li>
+              <li><a href="education-resources/constipation-in-children.html">Constipation in children</a></li>
+              <li><a href="education-resources/soiling-and-encopresis.html">Soiling and encopresis</a></li>
+              <li><a href="education-resources/irritable-bowel-syndrome-in-children.html">Irritable bowel syndrome (IBS) in children</a></li>
+              <li><a href="education-resources/chronic-or-recurrent-abdominal-pain.html">Chronic or recurrent abdominal pain</a></li>
+              <li><a href="education-resources/rectal-bleeding-in-children.html">Rectal bleeding in children</a></li>
+              <li><a href="education-resources/colon-polyps-in-children.html">Colon polyps in children</a></li>
+              <li><a href="education-resources/inflammatory-bowel-disease.html">Inflammatory bowel disease (Crohn’s & ulcerative colitis)</a></li>
+              <li><a href="education-resources/crohn-s-disease-in-children.html">Crohn’s disease in children</a></li>
+              <li><a href="education-resources/ulcerative-colitis-in-children.html">Ulcerative colitis in children</a></li>
+              <li><a href="education-resources/abnormal-liver-tests-in-children.html">Abnormal liver tests in children</a></li>
+              <li><a href="education-resources/jaundice-in-infants-and-children.html">Jaundice in infants and children</a></li>
+              <li><a href="education-resources/fatty-liver-disease-in-children.html">Fatty liver disease in children</a></li>
+              <li><a href="education-resources/autoimmune-hepatitis-in-children.html">Autoimmune hepatitis in children</a></li>
+              <li><a href="education-resources/cholestasis-and-pale-stools.html">Cholestasis and pale stools</a></li>
+              <li><a href="education-resources/biliary-atresia.html">Biliary atresia</a></li>
+              <li><a href="education-resources/acute-pancreatitis-in-children.html">Acute pancreatitis in children</a></li>
+              <li><a href="education-resources/chronic-pancreatitis-in-children.html">Chronic pancreatitis in children</a></li>
+              <li><a href="education-resources/poor-weight-gain-and-failure-to-thrive.html">Poor weight gain and “failure to thrive”</a></li>
+              <li><a href="education-resources/childhood-overweight-and-obesity.html">Childhood overweight and obesity</a></li>
+              <li><a href="education-resources/feeding-difficulties-and-picky-eating.html">Feeding difficulties and picky eating</a></li>
+              <li><a href="education-resources/tube-feeding-and-enteral-nutrition.html">Tube feeding and enteral nutrition</a></li>
+              <li><a href="education-resources/parenteral-nutrition.html">Parenteral nutrition (TPN)</a></li>
+              <li><a href="education-resources/delayed-gastric-emptying.html">Delayed gastric emptying (gastroparesis)</a></li>
+              <li><a href="education-resources/intestinal-motility-disorders.html">Intestinal motility disorders</a></li>
+              <li><a href="education-resources/hirschsprung-disease.html">Hirschsprung disease</a></li>
+              <li><a href="education-resources/spitting-up-versus-vomiting-what-is-normal-and-what-is-not.html">Spitting up versus vomiting: what is normal and what is not</a></li>
+              <li><a href="education-resources/red-flags-in-reflux.html">Red flags in reflux (poor weight gain, choking, blood, breathing symptoms)</a></li>
+              <li><a href="education-resources/feeding-refusal-in-infants-causes-and-first-steps.html">Feeding refusal in infants: causes and first steps</a></li>
+              <li><a href="education-resources/infant-colic-versus-reflux-versus-milk-protein-allergy.html">Infant colic versus reflux versus milk protein allergy</a></li>
+              <li><a href="education-resources/chronic-cough-or-hoarseness-related-to-reflux.html">Chronic cough or hoarseness related to reflux</a></li>
+              <li><a href="education-resources/food-impaction-what-parents-should-do-immediately.html">Food impaction: what parents should do immediately</a></li>
+              <li><a href="education-resources/pill-swallowing-tips-for-children.html">Pill swallowing tips for children</a></li>
+              <li><a href="education-resources/acute-vomiting-and-dehydration-home-oral-rehydration-plan.html">Acute vomiting and dehydration: home oral rehydration plan</a></li>
+              <li><a href="education-resources/when-vomiting-needs-urgent-assessment.html">When vomiting needs urgent assessment (bilious, blood, severe headache, lethargy)</a></li>
+              <li><a href="education-resources/vomiting-with-abdominal-pain-appendicitis-warning-signs.html">Vomiting with abdominal pain: appendicitis warning signs</a></li>
+              <li><a href="education-resources/pyloric-stenosis-parent-overview.html">Pyloric stenosis: parent overview</a></li>
+              <li><a href="education-resources/gastric-outlet-obstruction-parent-overview.html">Gastric outlet obstruction: parent overview</a></li>
+              <li><a href="education-resources/rumination-syndrome-in-children-and-adolescents.html">Rumination syndrome in children and adolescents</a></li>
+              <li><a href="education-resources/functional-nausea-in-children.html">Functional nausea in children</a></li>
+              <li><a href="education-resources/functional-abdominal-pain-disorders-what-they-are-and-how-we-treat.html">Functional abdominal pain disorders: what they are and how we treat</a></li>
+              <li><a href="education-resources/visceral-hypersensitivity-explained-for-families.html">Visceral hypersensitivity explained for families</a></li>
+              <li><a href="education-resources/anxiety-and-stress-effects-on-gut-symptoms-in-children.html">Anxiety and stress effects on gut symptoms in children</a></li>
+              <li><a href="education-resources/school-avoidance-with-abdominal-pain-a-family-plan.html">School avoidance with abdominal pain: a family plan</a></li>
+              <li><a href="education-resources/abdominal-migraine-symptoms-triggers-and-treatment.html">Abdominal migraine: symptoms, triggers, and treatment</a></li>
+              <li><a href="education-resources/persistent-diarrhea-longer-than-2-weeks-evaluation-overview.html">Persistent diarrhea longer than 2 weeks: evaluation overview</a></li>
+              <li><a href="education-resources/toddler-s-diarrhea.html">Toddler’s diarrhea (chronic nonspecific diarrhea)</a></li>
+              <li><a href="education-resources/clostridioides-difficile-in-children-when-it-matters.html">Clostridioides difficile in children: when it matters</a></li>
+              <li><a href="education-resources/giardiasis-in-children-risk-factors-testing-and-treatment.html">Giardiasis in children: risk factors, testing, and treatment</a></li>
+              <li><a href="education-resources/post-infectious-lactose-intolerance.html">Post-infectious lactose intolerance</a></li>
+              <li><a href="education-resources/fructose-intolerance-and-sorbitol-sensitivity.html">Fructose intolerance and sorbitol sensitivity</a></li>
+              <li><a href="education-resources/small-intestinal-bacterial-overgrowth-in-children.html">Small intestinal bacterial overgrowth (SIBO) in children</a></li>
+              <li><a href="education-resources/protein-losing-enteropathy-parent-overview.html">Protein-losing enteropathy: parent overview</a></li>
+              <li><a href="education-resources/intestinal-lymphangiectasia-parent-overview.html">Intestinal lymphangiectasia: parent overview</a></li>
+              <li><a href="education-resources/constipation-action-plan-clean-out-vs-maintenance.html">Constipation action plan: clean-out vs maintenance</a></li>
+              <li><a href="education-resources/how-to-use-polyethylene-glycol-safely.html">How to use polyethylene glycol (PEG) safely</a></li>
+              <li><a href="education-resources/toilet-training-basics-for-constipation-prone-children.html">Toilet training basics for constipation-prone children</a></li>
+              <li><a href="education-resources/the-stool-withholding-cycle-explained.html">The stool withholding cycle explained</a></li>
+              <li><a href="education-resources/encopresis-and-school-plans-for-families.html">Encopresis and school plans for families</a></li>
+              <li><a href="education-resources/anal-fissures-in-children-symptoms-and-care.html">Anal fissures in children: symptoms and care</a></li>
+              <li><a href="education-resources/pelvic-floor-dyssynergia-in-older-children.html">Pelvic floor dyssynergia (functional outlet obstruction) in older children</a></li>
+              <li><a href="education-resources/blood-on-stool-in-children-common-causes-and-when-to-worry.html">Blood on stool in children: common causes and when to worry</a></li>
+              <li><a href="education-resources/meckel-s-diverticulum-parent-overview.html">Meckel’s diverticulum: parent overview</a></li>
+              <li><a href="education-resources/ibd-red-flags-in-children.html">IBD red flags in children</a></li>
+              <li><a href="education-resources/perianal-symptoms-in-children-when-to-seek-care.html">Perianal symptoms in children: when to seek care</a></li>
+              <li><a href="education-resources/new-diagnosis-ibd-first-30-days-guide.html">New diagnosis IBD: first 30 days guide</a></li>
+              <li><a href="education-resources/fecal-calprotectin-explained-for-families.html">Fecal calprotectin explained for families</a></li>
+              <li><a href="education-resources/growth-and-puberty-in-pediatric-ibd.html">Growth and puberty in pediatric IBD</a></li>
+              <li><a href="education-resources/exclusive-enteral-nutrition-for-crohn-s-disease.html">Exclusive enteral nutrition (EEN) for Crohn’s disease</a></li>
+              <li><a href="education-resources/vaccines-for-children-on-immunosuppression.html">Vaccines for children on immunosuppression</a></li>
+              <li><a href="education-resources/biologics-and-infection-risk-practical-precautions.html">Biologics and infection risk: practical precautions</a></li>
+              <li><a href="education-resources/ibd-when-to-call-urgently.html">IBD: when to call urgently</a></li>
+              <li><a href="education-resources/school-accommodations-for-children-with-ibd.html">School accommodations for children with IBD</a></li>
+              <li><a href="education-resources/understanding-pediatric-liver-blood-tests.html">Understanding pediatric liver blood tests (ALT, AST, ALP, GGT, bilirubin)</a></li>
+              <li><a href="education-resources/gilbert-syndrome-in-children.html">Gilbert syndrome in children</a></li>
+              <li><a href="education-resources/viral-hepatitis-a-in-children-overview-and-prevention.html">Viral hepatitis A in children: overview and prevention</a></li>
+              <li><a href="education-resources/viral-hepatitis-b-in-children-overview-and-prevention.html">Viral hepatitis B in children: overview and prevention</a></li>
+              <li><a href="education-resources/primary-sclerosing-cholangitis-in-children-overview.html">Primary sclerosing cholangitis (PSC) in children: overview</a></li>
+              <li><a href="education-resources/alpha-1-antitrypsin-deficiency-liver-disease-overview.html">Alpha-1 antitrypsin deficiency: liver disease overview</a></li>
+              <li><a href="education-resources/wilson-disease-parent-overview.html">Wilson disease: parent overview</a></li>
+              <li><a href="education-resources/gallstones-in-children.html">Gallstones in children</a></li>
+              <li><a href="education-resources/choledochal-cyst-overview.html">Choledochal cyst: overview</a></li>
+              <li><a href="education-resources/itchy-skin-in-cholestasis-why-it-happens-and-treatments.html">Itchy skin in cholestasis: why it happens and treatments</a></li>
+              <li><a href="education-resources/pale-stools-and-dark-urine-why-urgent-evaluation-matters.html">Pale stools and dark urine: why urgent evaluation matters</a></li>
+              <li><a href="education-resources/acute-pancreatitis-recovery-diet-and-recurrence-prevention.html">Acute pancreatitis recovery: diet and recurrence prevention</a></li>
+              <li><a href="education-resources/hereditary-pancreatitis-overview.html">Hereditary pancreatitis: overview</a></li>
+              <li><a href="education-resources/pancreatic-enzyme-replacement-therapy-how-to-take-it-correctly.html">Pancreatic enzyme replacement therapy (PERT): how to take it correctly</a></li>
+              <li><a href="education-resources/exocrine-pancreatic-insufficiency-in-children.html">Exocrine pancreatic insufficiency (EPI) in children</a></li>
+              <li><a href="education-resources/growth-charts-explained-for-families.html">Growth charts explained for families</a></li>
+              <li><a href="education-resources/failure-to-thrive-evaluation-overview.html">Failure to thrive: evaluation overview</a></li>
+              <li><a href="education-resources/selective-eating-versus-arfid-parent-overview.html">Selective eating versus ARFID: parent overview</a></li>
+              <li><a href="education-resources/feeding-therapy-what-it-is-and-when-to-refer.html">Feeding therapy: what it is and when to refer</a></li>
+              <li><a href="education-resources/iron-deficiency-with-or-without-anemia-diet-and-supplements.html">Iron deficiency with or without anemia: diet and supplements</a></li>
+              <li><a href="education-resources/vitamin-d-deficiency-overview-and-supplementation.html">Vitamin D deficiency: overview and supplementation</a></li>
+              <li><a href="education-resources/constipation-friendly-diet-fiber-and-fluids.html">Constipation-friendly diet: fiber and fluids</a></li>
+              <li><a href="education-resources/food-allergy-versus-intolerance-what-is-the-difference.html">Food allergy versus intolerance: what is the difference</a></li>
+              <li><a href="education-resources/elimination-diets-in-children-safe-approach-and-risks.html">Elimination diets in children: safe approach and risks</a></li>
+              <li><a href="education-resources/probiotics-in-children-what-conditions-have-evidence.html">Probiotics in children: what conditions have evidence</a></li>
+              <li><a href="education-resources/pediatric-obesity-a-family-based-plan.html">Pediatric obesity: a family-based plan</a></li>
+              <li><a href="education-resources/nafld-prevention-for-families.html">NAFLD prevention for families</a></li>
+              <li><a href="education-resources/sugary-drinks-and-liver-health-in-children.html">Sugary drinks and liver health in children</a></li>
+              <li><a href="education-resources/screen-time-and-appetite-regulation.html">Screen time and appetite regulation</a></li>
+              <li><a href="education-resources/blood-tests-for-children-preparation-tips.html">Blood tests for children: preparation tips</a></li>
+              <li><a href="education-resources/stool-tests-explained.html">Stool tests explained (culture, parasites, calprotectin, occult blood)</a></li>
+              <li><a href="education-resources/abdominal-ultrasound-what-it-shows-and-doesn-t-show.html">Abdominal ultrasound: what it shows and doesn’t show</a></li>
+              <li><a href="education-resources/upper-endoscopy-preparation-anesthesia-biopsies-aftercare.html">Upper endoscopy (EGD): preparation, anesthesia, biopsies, aftercare</a></li>
+              <li><a href="education-resources/colonoscopy-in-children-bowel-prep-and-recovery.html">Colonoscopy in children: bowel prep and recovery</a></li>
+              <li><a href="education-resources/ph-impedance-reflux-testing-what-to-expect.html">pH impedance reflux testing: what to expect</a></li>
+              <li><a href="education-resources/breath-tests-prep-and-basics.html">Breath tests (lactose, fructose, hydrogen/methane): prep and basics</a></li>
+              <li><a href="education-resources/gastric-emptying-scan-why-we-do-it.html">Gastric emptying scan: why we do it</a></li>
+              <li><a href="education-resources/mrcp-why-and-what-to-expect.html">MRCP (bile duct MRI): why and what to expect</a></li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="edu-group" id="general-peds-edu">
+          <h2><span class="edu-group-icon">🧸</span>General Pediatrics</h2>
+          <p>Common childhood conditions and practical health guidance for families.</p>
+          <div class="edu-list-wrap">
+            <ul class="edu-list">
+              <li><a href="education-resources/fever-in-children-when-to-worry.html">Fever in children: when to worry</a></li>
+              <li><a href="education-resources/common-cold-and-flu.html">Common cold and flu</a></li>
+              <li><a href="education-resources/ear-infections.html">Ear infections (otitis media)</a></li>
+              <li><a href="education-resources/sore-throat-and-tonsillitis.html">Sore throat and tonsillitis</a></li>
+              <li><a href="education-resources/cough-wheeze-and-bronchiolitis.html">Cough, wheeze, and bronchiolitis</a></li>
+              <li><a href="education-resources/asthma.html">Asthma</a></li>
+              <li><a href="education-resources/pneumonia.html">Pneumonia</a></li>
+              <li><a href="education-resources/vaccines-and-routine-immunizations.html">Vaccines and routine immunizations</a></li>
+              <li><a href="education-resources/growth-weight-and-height-concerns.html">Growth, weight, and height concerns</a></li>
+              <li><a href="education-resources/anemia-in-children.html">Anemia in children</a></li>
+              <li><a href="education-resources/headaches-in-children.html">Headaches in children</a></li>
+              <li><a href="education-resources/migraine-in-children.html">Migraine in children</a></li>
+              <li><a href="education-resources/urinary-tract-infections.html">Urinary tract infections</a></li>
+              <li><a href="education-resources/bedwetting.html">Bedwetting (nocturnal enuresis)</a></li>
+              <li><a href="education-resources/common-skin-rashes-in-children.html">Common skin rashes in children</a></li>
+              <li><a href="education-resources/allergies-and-allergic-rhinitis.html">Allergies and allergic rhinitis</a></li>
+              <li><a href="education-resources/eczema-in-children.html">Eczema in children</a></li>
+              <li><a href="education-resources/healthy-sleep-habits.html">Healthy sleep habits</a></li>
+              <li><a href="education-resources/behavior-and-attention-concerns.html">Behavior and attention concerns (ADHD overview)</a></li>
+              <li><a href="education-resources/school-health-and-learning-concerns.html">School health and learning concerns</a></li>
+              <li><a href="education-resources/accident-and-injury-prevention.html">Accident and injury prevention</a></li>
+              <li><a href="education-resources/seizures-and-fever-parent-guide.html">Seizures and fever (febrile seizures): parent guide</a></li>
+              <li><a href="education-resources/vomiting-in-children-common-causes-and-red-flags.html">Vomiting in children: common causes and red flags</a></li>
+              <li><a href="education-resources/dehydration-in-children-signs-and-what-to-do.html">Dehydration in children: signs and what to do</a></li>
+              <li><a href="education-resources/abdominal-pain-in-children-when-to-seek-urgent-care.html">Abdominal pain in children: when to seek urgent care</a></li>
+              <li><a href="education-resources/constipation-in-toddlers-toilet-training-and-routines.html">Constipation in toddlers: toilet training and routines</a></li>
+              <li><a href="education-resources/poisoning-and-ingestion-safety-in-children.html">Poisoning and ingestion safety in children</a></li>
+              <li><a href="education-resources/choking-prevention-and-first-steps.html">Choking prevention and first steps</a></li>
+              <li><a href="education-resources/food-allergies-in-children-recognition-and-action-plan.html">Food allergies in children: recognition and action plan</a></li>
+              <li><a href="education-resources/anaphylaxis-in-children-use-of-epinephrine-auto-injector.html">Anaphylaxis in children: use of epinephrine auto-injector</a></li>
+              <li><a href="education-resources/diaper-rash-prevention-and-care.html">Diaper rash: prevention and care</a></li>
+              <li><a href="education-resources/hand-foot-and-mouth-disease.html">Hand-foot-and-mouth disease</a></li>
+              <li><a href="education-resources/stomach-flu-home-care.html">Stomach flu (viral gastroenteritis): home care</a></li>
+              <li><a href="education-resources/nutrition-for-picky-eaters-practical-guide.html">Nutrition for picky eaters: practical guide</a></li>
+              <li><a href="education-resources/healthy-snacks-and-drinks-for-children.html">Healthy snacks and drinks for children</a></li>
+              <li><a href="education-resources/sleep-hygiene-for-school-age-children-and-teens.html">Sleep hygiene for school-age children and teens</a></li>
+              <li><a href="education-resources/screen-time-guidance-for-families.html">Screen time guidance for families</a></li>
+              <li><a href="education-resources/childhood-overweight-first-steps-for-families.html">Childhood overweight: first steps for families</a></li>
+              <li><a href="education-resources/head-injury-and-concussion-when-to-worry.html">Head injury and concussion: when to worry</a></li>
+              <li><a href="education-resources/back-to-school-health-checklist.html">Back-to-school health checklist</a></li>
+            </ul>
+          </div>
+        </section>
+
+      </div>
+
+      <p class="edu-note">
+        These resources are for education only and do not replace a medical consultation.
+        If you have urgent symptoms or concerns, please seek medical attention or contact emergency services.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div>© <span id="year"></span> Ibn al-Nafis Gastroenterology. All rights reserved.</div>
+    <div>For urgent medical concerns, please contact emergency services or your local hospital.</div>
+    <div>Email: Info@pedsgimind.ca</div>
+  </div>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</footer>
+</body>
+</html>

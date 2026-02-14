@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Al Farabi Pediatric GI EMR / Registry</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+  />
+  <style>
+    body {
+      background-color: #f7f7fb;
+    }
+    .sidebar {
+      max-height: 90vh;
+      overflow-y: auto;
+      border-right: 1px solid #ddd;
+    }
+    .patient-item {
+      cursor: pointer;
+    }
+    .patient-item.active {
+      background-color: #e0f3ff;
+    }
+    textarea {
+      font-size: 0.9rem;
+    }
+    .small-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: #666;
+    }
+    .visit-card {
+      border-left: 4px solid #0d6efd;
+    }
+    .badge-visit {
+      font-size: 0.7rem;
+    }
+    /* Lock screen */
+    .lock-screen {
+      position: fixed;
+      inset: 0;
+      background: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .lock-screen .card {
+      max-width: 360px;
+      width: 100%;
+    }
+   /* ====== BRANDING ====== */
+.brand-logo {
+  height: 34px;
+  width: auto;
+  object-fit: contain;
+}
+
+.app-footer {
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.footer-emblem {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.95;
+}
+
+@media (max-width: 576px) {
+  .brand-logo { height: 28px; }
+  .footer-emblem { height: 24px; }
+} 
+  </style>
+</head>
+<body>
+  <!-- PIN LOCK SCREEN -->
+  <div id="lockScreen" class="lock-screen">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title mb-2" id="lockTitle">Set up a PIN for this EMR</h5>
+        <p class="small text-muted" id="lockSubtitle">
+          Choose a 4–8 digit PIN to protect access to this EMR on <strong>this device</strong>.
+        </p>
+        <div class="mb-2">
+          <label class="form-label small mb-1" id="lockLabel">New PIN</label>
+          <input
+            type="password"
+            class="form-control form-control-sm"
+            id="lockPinInput"
+            inputmode="numeric"
+            autocomplete="off"
+          />
+        </div>
+        <div class="mb-2" id="lockConfirmGroup">
+          <label class="form-label small mb-1">Confirm PIN</label>
+          <input
+            type="password"
+            class="form-control form-control-sm"
+            id="lockPinConfirm"
+            inputmode="numeric"
+            autocomplete="off"
+          />
+        </div>
+        <div class="text-danger small mb-2" id="lockError"></div>
+        <button class="btn btn-primary btn-sm w-100" id="lockBtn">
+          Set PIN &amp; unlock
+        </button>
+        <p class="small text-muted mt-2 mb-0">
+          Note: PIN and all patient data are stored locally in this browser.
+          Clearing browser data will remove the PIN <strong>and</strong> the EMR data.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="appMain" class="d-none">
+    <nav class="navbar navbar-light bg-white border-bottom mb-2">
+   <div class="container-fluid">
+  <div class="d-flex align-items-center gap-2">
+    <!-- Avicenna logo (repo: /images/avicenna-logo-horizontal.png) -->
+    <img
+      src="../images/avicenna-logo-horizontal.png"
+      alt="Avicenna Medical Inc."
+      class="brand-logo"
+    />
+    <div class="lh-sm">
+      <div class="fw-semibold">Al Farabi Pediatric GI – Mini EMR / Registry</div>
+      <div class="small text-muted">Avicenna Medical Inc. · Al Farabi Gastroenterology &amp; Endoscopy Centre</div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <button class="btn btn-outline-secondary btn-sm" id="btnExport">
+      Backup (Export JSON)
+    </button>
+
+    <label class="btn btn-outline-secondary btn-sm mb-0">
+      Restore
+      <input type="file" id="importFile" hidden />
+    </label>
+
+<div class="d-flex align-items-center gap-2">
+  <select class="form-select form-select-sm" id="exportBatchSize" style="width: 95px;">
+    <option value="10">10</option>
+    <option value="25" selected>25</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+  </select>
+
+  <input
+    type="number"
+    class="form-control form-control-sm"
+    id="exportStartIndex"
+    style="width: 95px;"
+    min="1"
+    value="1"
+    title="Start patient # (1 = first patient)"
+  />
+
+  <button class="btn btn-outline-primary btn-sm" id="btnExportAllPatientsZip">
+    Export batch (PDF ZIP)
+  </button>
+</div>
+
+
+    <!-- RESET EMR button -->
+    <button class="btn btn-outline-danger btn-sm" id="btnResetEmr" title="Deletes ALL local EMR data on this device">
+      Reset EMR
+    </button>
+  </div>
+</div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- LEFT: patients -->
+        <div class="col-12 col-md-3 sidebar bg-white p-2">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="mb-0">Patients</h6>
+            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#patientModal">
+              + New
+            </button>
+          </div>
+          <input
+            type="text"
+            id="patientSearch"
+            class="form-control form-control-sm mb-2"
+            placeholder="Search name / phone..."
+          />
+          <ul class="list-group" id="patientList"></ul>
+        </div>
+
+        <!-- RIGHT: details -->
+        <div class="col-12 col-md-9">
+          <div id="noPatientSelected" class="text-muted p-4">
+            Select a patient or create a new one.
+          </div>
+
+          <div id="patientDetail" class="d-none p-2">
+            <!-- Patient header -->
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <h5 id="detailName"></h5>
+                <div class="small-label" id="detailId"></div>
+                <div class="small text-muted" id="detailDemographics"></div>
+              </div>
+              <div class="d-flex gap-2">
+                <button
+                  class="btn btn-outline-secondary btn-sm"
+                  id="btnEditPatient"
+                >
+                  Edit Patient
+                </button>
+                <button
+                  class="btn btn-outline-primary btn-sm"
+                  id="btnExportPatient"
+                >
+                  Export history
+                </button>
+              </div>
+            </div>
+
+            <!-- Visit creation -->
+            <div class="card mb-3">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span>New Visit</span>
+                <span class="badge bg-info text-dark badge-visit">
+                  Enter note in English, summaries will be EN/AR/KU via ChatGPT or AI button
+                </span>
+              </div>
+              <div class="card-body">
+                <form id="visitForm">
+                  <div class="row g-2">
+                    <div class="col-md-3">
+                      <label class="form-label required">Date</label>
+                      <input
+                        type="date"
+                        class="form-control form-control-sm"
+                        id="visitDate"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label required">Visit type</label>
+                      <select
+                        class="form-select form-select-sm"
+                        id="visitType"
+                        required
+                      >
+                        <option value="New consultation">New consultation</option>
+                        <option value="Follow-up">Follow-up</option>
+                        <option value="Urgent">Urgent</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label required">Chief complaint</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        id="visitCC"
+                        required
+                      />
+                    </div>
+                  </div>
+
+               <div class="row g-2 mt-1">
+  <div class="col-md-6">
+    <label class="form-label">HPI (History of Present Illness)</label>
+    <textarea class="form-control form-control-sm" rows="3" id="visitHPI"></textarea>
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Past medical history</label>
+    <textarea class="form-control form-control-sm" rows="3" id="visitPastMedical"></textarea>
+  </div>
+</div>
+
+<div class="row g-2 mt-1">
+  <div class="col-md-4">
+    <label class="form-label">Medications</label>
+    <textarea class="form-control form-control-sm" rows="2" id="visitMedications"></textarea>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Allergies</label>
+    <textarea class="form-control form-control-sm" rows="2" id="visitAllergies"></textarea>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Immunization history</label>
+    <textarea class="form-control form-control-sm" rows="2" id="visitImmunizations"></textarea>
+  </div>
+</div>
+
+<div class="row g-2 mt-1">
+  <div class="col-md-6">
+    <label class="form-label">Family history</label>
+    <textarea class="form-control form-control-sm" rows="2" id="visitFamilyHistory"></textarea>
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Social history</label>
+    <textarea class="form-control form-control-sm" rows="2" id="visitSocialHistory"></textarea>
+  </div>
+</div>
+
+                  <div class="row g-2 mt-1">
+                    <div class="col-md-4">
+                      <label class="form-label">Vitals</label>
+                      <textarea
+                        class="form-control form-control-sm"
+                        rows="2"
+                        id="visitVitals"
+                        placeholder="HR, RR, BP, Temp, Wt, Ht, BMI, centiles..."
+                      ></textarea>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Exam – General / Abdomen</label>
+                      <textarea
+                        class="form-control form-control-sm"
+                        rows="2"
+                        id="visitExam"
+                      ></textarea>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Other exam findings</label>
+                      <textarea
+                        class="form-control form-control-sm"
+                        rows="2"
+                        id="visitOtherExam"
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row g-2 mt-1">
+                    <div class="col-md-6">
+                      <label class="form-label required">Impression / Diagnosis</label>
+                      <textarea
+                        class="form-control form-control-sm"
+                        rows="2"
+                        id="visitImpression"
+                        required
+                      ></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Plan – Investigations (labs, imaging, scopes)</label>
+                      <textarea
+                        class="form-control form-control-sm"
+                        rows="2"
+                        id="visitPlanInvestigations"
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row g-2 mt-1">
+                    <div class="col-md-6">
+                      <label class="form-label">Plan – Medications</label>
+                      <textarea
+                        class="form-control form-control-sm"
+                        rows="2"
+                        id="visitPlanMeds"
+                      ></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Plan – Diet / Counseling / Follow-up</label>
+                      <textarea
+                        class="form-control form-control-sm"
+                        rows="2"
+                        id="visitPlanCounsel"
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row g-2 mt-1">
+                    <div class="col-md-4">
+                      <label class="form-label">Follow-up interval</label>
+                      <select
+                        class="form-select form-select-sm"
+                        id="visitFollowInterval"
+                      >
+                        <option value="">PRN</option>
+                        <option value="1 week">1 week</option>
+                        <option value="2 weeks">2 weeks</option>
+                        <option value="1 month">1 month</option>
+                        <option value="3 months">3 months</option>
+                        <option value="6 months">6 months</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Next follow-up date</label>
+                      <input
+                        type="date"
+                        class="form-control form-control-sm"
+                        id="visitNextDate"
+                      />
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end justify-content-end">
+                      <button type="submit" class="btn btn-success btn-sm w-100">
+                        Save visit
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+<div class="row g-2 mt-1">
+  <div class="col-md-4">
+    <label class="form-label">Educational resources provided?</label>
+    <select class="form-select form-select-sm" id="visitEduProvided">
+      <option value="">No</option>
+      <option value="Yes">Yes</option>
+    </select>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Education language</label>
+    <select class="form-select form-select-sm" id="visitEduLanguage">
+      <option value="">—</option>
+      <option value="English">English</option>
+      <option value="Arabic">Arabic</option>
+      <option value="Kurdish">Kurdish</option>
+      <option value="Bilingual (EN+AR)">Bilingual (EN+AR)</option>
+      <option value="Bilingual (EN+KU)">Bilingual (EN+KU)</option>
+      <option value="Trilingual (EN+AR+KU)">Trilingual (EN+AR+KU)</option>
+    </select>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Resource type</label>
+    <select class="form-select form-select-sm" id="visitEduType">
+      <option value="">—</option>
+      <option value="Handout">Handout</option>
+      <option value="Website link">Website link</option>
+      <option value="Clinic instruction">Clinic instruction</option>
+      <option value="Video">Video</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+</div>
+
+<div class="row g-2 mt-1">
+  <div class="col-12">
+    <label class="form-label">Education details (title/link/notes)</label>
+    <textarea class="form-control form-control-sm" rows="2" id="visitEduDetails"
+      placeholder="e.g., Constipation handout (Arabic), Diet fiber sheet (English), link: https://..."></textarea>
+  </div>
+</div>
+            <!-- Visit list + ChatGPT + Orders + AI -->
+            <div class="row g-3">
+              <div class="col-md-7">
+                <h6>Previous Visits</h6>
+                <div id="visitList" class="d-flex flex-column gap-2"></div>
+              </div>
+              <div class="col-md-5">
+                <h6>ChatGPT Summary Helper (manual)</h6>
+                <p class="small text-muted">
+                  Select a visit below, then click "Copy prompt" to generate parent-friendly summaries
+                  in <strong>English, Arabic and Kurdish</strong> using ChatGPT.
+                </p>
+                <textarea
+                  id="chatgptPrompt"
+                  class="form-control form-control-sm mb-2"
+                  rows="6"
+                  readonly
+                ></textarea>
+                <button class="btn btn-outline-primary btn-sm mb-3" id="btnCopyPrompt">
+                  Copy prompt text
+                </button>
+                <button type="button" class="btn btn-success btn-sm mb-3" id="btnPdfSelectedVisit">
+                Save selected visit as PDF
+                </button>
+                <hr class="my-2" />
+                <h6>AI Summary (via Cloudflare Worker)</h6>
+                <p class="small text-muted">
+                  After you configure your backend URL, click the button to automatically generate EN / AR / KU summaries
+                  for the selected visit.
+                </p>
+                <button class="btn btn-primary btn-sm mb-2" id="btnGenerateAiSummary">
+                  Generate AI summaries for selected visit
+                </button>
+                <div class="small text-danger mb-1" id="aiError"></div>
+                <label class="form-label small mb-0 mt-1">English summary</label>
+                <textarea id="aiSummaryEn" class="form-control form-control-sm mb-1" rows="3"></textarea>
+                <button class="btn btn-outline-secondary btn-sm mb-2" id="btnCopyAiEn">
+                  Copy English
+                </button>
+                <label class="form-label small mb-0">Arabic summary</label>
+                <textarea id="aiSummaryAr" class="form-control form-control-sm mb-1" rows="3"></textarea>
+                <button class="btn btn-outline-secondary btn-sm mb-2" id="btnCopyAiAr">
+                  Copy Arabic
+                </button>
+                <label class="form-label small mb-0">Kurdish summary</label>
+                <textarea id="aiSummaryKu" class="form-control form-control-sm mb-1" rows="3"></textarea>
+                <button class="btn btn-outline-secondary btn-sm mb-2" id="btnCopyAiKu">
+                  Copy Kurdish
+                </button>
+
+                <hr class="my-2" />
+                <h6>Orders (labs / imaging / scopes) for selected visit</h6>
+                <p class="small text-muted">
+                  Click "Details" on a visit first, then use this form to add tests for that visit.
+                </p>
+                <form id="orderForm" class="border rounded p-2 mb-2 small">
+                  <div class="mb-1">
+                    <label class="form-label small mb-0">Type</label>
+                    <select class="form-select form-select-sm" id="orderType">
+                      <option value="Lab">Lab</option>
+                      <option value="Imaging">Imaging</option>
+                      <option value="Endoscopy">Endoscopy</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div class="mb-1">
+                    <label class="form-label small mb-0">Test / procedure name</label>
+                    <input
+                      type="text"
+                      class="form-control form-control-sm"
+                      id="orderName"
+                      placeholder="CBC, TTG IgA, Abdominal US, EGD..."
+                    />
+                  </div>
+                  <div class="mb-1">
+                    <label class="form-label small mb-0">Ordered date</label>
+                    <input type="date" class="form-control form-control-sm" id="orderDate" />
+                  </div>
+                  <div class="mb-1">
+                    <label class="form-label small mb-0">Status</label>
+                    <select class="form-select form-select-sm" id="orderStatus">
+                      <option value="Ordered">Ordered</option>
+                      <option value="Pending result">Pending result</option>
+                      <option value="Resulted">Resulted</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </div>
+                  <div class="mb-1">
+                    <label class="form-label small mb-0">Result date (if available)</label>
+                    <input type="date" class="form-control form-control-sm" id="orderResultDate" />
+                  </div>
+                  <div class="mb-1">
+                    <label class="form-label small mb-0">Result summary / notes</label>
+                    <textarea
+                      class="form-control form-control-sm"
+                      rows="2"
+                      id="orderResultText"
+                    ></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-outline-success btn-sm w-100">
+                    Add order to this visit
+                  </button>
+                </form>
+                <div id="orderList" class="small"></div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /right col -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Patient modal -->
+  <div
+    class="modal fade"
+    id="patientModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <form id="patientForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="patientModalTitle">New Patient</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row g-2">
+              <div class="col-md-4">
+                <label class="form-label required">Patient ID</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="patId"
+                  required
+                  placeholder="e.g. AF-0001"
+                />
+              </div>
+              <div class="col-md-8">
+                <label class="form-label required">Full Name (English)</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="patNameEn"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="row g-2 mt-1">
+              <div class="col-md-6">
+                <label class="form-label">Full Name (Arabic)</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="patNameAr"
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Full Name (Kurdish)</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="patNameKu"
+                />
+              </div>
+            </div>
+
+            <div class="row g-2 mt-1">
+              <div class="col-md-4">
+                <label class="form-label">Date of Birth</label>
+                <input
+                  type="date"
+                  class="form-control form-control-sm"
+                  id="patDob"
+                />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Sex</label>
+                <select
+                  class="form-select form-select-sm"
+                  id="patSex"
+                >
+                  <option value=""></option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Phone / WhatsApp</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="patPhone"
+                />
+              </div>
+            </div>
+
+            <div class="row g-2 mt-1">
+              <div class="col-md-6">
+                <label class="form-label">City / Area</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="patCity"
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Referral Source</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="patReferral"
+                  placeholder="Self, pediatrician, hospital, social media..."
+                />
+              </div>
+            </div>
+
+            <div class="row g-2 mt-1">
+              <div class="col-md-6">
+                <label class="form-label">Primary caregiver name</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="patCaregiver"
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Relationship</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="patCaregiverRel"
+                  placeholder="Mother, father, grandparent..."
+                />
+              </div>
+            </div>
+
+            <div class="mt-2">
+              <label class="form-label">Notes / Flags (IBD, Celiac, complex etc.)</label>
+              <textarea
+                class="form-control form-control-sm"
+                rows="2"
+                id="patNotes"
+              ></textarea>
+            </div>
+
+            <input type="hidden" id="patEditIndex" />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm">
+              Save patient
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<footer class="app-footer mt-3">
+  <div class="container-fluid py-3">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <img src="../images/avicenna-emblem.png" class="footer-emblem" alt="Avicenna emblem" />
+          <div class="fw-semibold">Al Farabi Gastroenterology &amp; Endoscopy Centre</div>
+        </div>
+        <div class="small text-muted">Clinic location: Baqubah, Diyala Governorate, Iraq.</div>
+        <div class="small">WhatsApp / Phone (clinic): <a href="tel:+9647721738755">+964 772-173-8755</a></div>
+        <div class="small">Email (clinic): <a href="mailto:info@avicennamedical.org">info@avicennamedical.org</a></div>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <div class="fw-semibold mb-2">Avicenna Medical Inc. – Headquarter office</div>
+        <div class="small text-muted">Main office contact: Almansor, Baghdad, Iraq.</div>
+        <div class="small">Administrative &amp; documents: <a href="mailto:Documents@avicennamedical.org">Documents@avicennamedical.org</a></div>
+        <div class="small">Complaints &amp; quality: <a href="mailto:Complaints@avicennamedical.org">Complaints@avicennamedical.org</a></div>
+      </div>
+      </div>
+    </div>
+
+    <hr class="my-3" />
+    <div class="small text-muted">
+      This mini-EMR stores data locally in this browser on this device. Clearing browser data will remove stored records.
+    </div>
+  </div>
+</footer>
+  <!-- Patient export modal -->
+  <div class="modal fade" id="patientExportModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Export patient history</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="small text-muted">
+            This text includes demographics, all visits, and orders. Copy and paste into a referral letter or report.
+          </p>
+          <textarea id="patientExportText" class="form-control form-control-sm" rows="20"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary btn-sm" id="btnCopyPatientExport">Copy text</button>
+          <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ====== CONFIG ======
+    // Replace this with your Cloudflare Worker URL when ready, e.g.:
+    // const AI_SUMMARY_ENDPOINT = "https://your-worker-name.your-subdomain.workers.dev/summary";
+    const AI_SUMMARY_ENDPOINT = ""; // empty = disabled, will show error
+
+    function legacyCombinedHistory(v) {
+  // Old field fallback: v.pmh = "Past history / meds / allergies"
+  return (v && v.pmh) ? v.pmh : "";
+}
+
+function hasAnyNewHistoryFields(v) {
+  return !!(
+    (v.pastMedical && v.pastMedical.trim()) ||
+    (v.medications && v.medications.trim()) ||
+    (v.allergies && v.allergies.trim()) ||
+    (v.immunizations && v.immunizations.trim()) ||
+    (v.familyHistory && v.familyHistory.trim()) ||
+    (v.socialHistory && v.socialHistory.trim())
+  );
+}
+    // ====== DATA STRUCTURES ======
+    let patients = [];
+    let visits = [];
+    let orders = [];
+    let selectedPatientId = null;
+    let currentVisitIdForOrders = null;
+    let lastSelectedVisit = null;
+
+    const LS_PATIENTS_KEY = "af_emr_patients";
+    const LS_VISITS_KEY = "af_emr_visits";
+    const LS_ORDERS_KEY = "af_emr_orders";
+    const PIN_KEY = "af_emr_pin";
+function resetEmrDataHard() {
+  // Extra safety: ask user to type RESET
+  const confirm1 = confirm(
+    "⚠️ RESET EMR will permanently delete ALL patients, visits, and orders stored locally on THIS device.\n\nDo you want to continue?"
+  );
+  if (!confirm1) return;
+
+  const typed = prompt('Type RESET to confirm deletion:');
+  if (typed !== "RESET") {
+    alert("Reset cancelled. You must type RESET exactly.");
+    return;
+  }
+
+  // Clear ONLY this app's keys
+  localStorage.removeItem(LS_PATIENTS_KEY);
+  localStorage.removeItem(LS_VISITS_KEY);
+  localStorage.removeItem(LS_ORDERS_KEY);
+
+  // Also clear PIN (recommended)
+  localStorage.removeItem(PIN_KEY);
+
+  // Optional: clear any other keys you may add later:
+  // localStorage.removeItem("af_emr_settings");
+
+  alert("✅ EMR data cleared. The page will now reload.");
+  location.reload();
+}
+    function loadData() {
+      try {
+        const p = localStorage.getItem(LS_PATIENTS_KEY);
+        const v = localStorage.getItem(LS_VISITS_KEY);
+        const o = localStorage.getItem(LS_ORDERS_KEY);
+        patients = p ? JSON.parse(p) : [];
+        visits = v ? JSON.parse(v) : [];
+        orders = o ? JSON.parse(o) : [];
+      } catch (e) {
+        console.error("Error loading data", e);
+        patients = [];
+        visits = [];
+        orders = [];
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem(LS_PATIENTS_KEY, JSON.stringify(patients));
+      localStorage.setItem(LS_VISITS_KEY, JSON.stringify(visits));
+      localStorage.setItem(LS_ORDERS_KEY, JSON.stringify(orders));
+    }
+
+    // ====== PATIENTS ======
+    function renderPatients(filter = "") {
+      const list = document.getElementById("patientList");
+      list.innerHTML = "";
+      const q = filter.toLowerCase();
+      patients
+        .slice()
+        .sort((a, b) => a.nameEn.localeCompare(b.nameEn))
+        .forEach((p) => {
+          if (
+            q &&
+            !(
+              p.nameEn.toLowerCase().includes(q) ||
+              (p.phone || "").toLowerCase().includes(q) ||
+              (p.id || "").toLowerCase().includes(q)
+            )
+          ) {
+            return;
+          }
+          const li = document.createElement("li");
+          li.className =
+            "list-group-item list-group-item-action patient-item py-1";
+          if (p.id === selectedPatientId) li.classList.add("active");
+          li.innerHTML = `
+            <div class="fw-semibold">${p.nameEn}</div>
+            <div class="small text-muted">${p.id || ""} ${
+            p.phone ? " · " + p.phone : ""
+          }</div>
+          `;
+          li.onclick = () => {
+            selectedPatientId = p.id;
+            renderPatients(document.getElementById("patientSearch").value);
+            showPatientDetail();
+          };
+          list.appendChild(li);
+        });
+    }
+
+    function getPatientById(id) {
+      return patients.find((p) => p.id === id);
+    }
+
+    function showPatientDetail() {
+      const detail = document.getElementById("patientDetail");
+      const none = document.getElementById("noPatientSelected");
+      const patient = getPatientById(selectedPatientId);
+      if (!patient) {
+        detail.classList.add("d-none");
+        none.classList.remove("d-none");
+        return;
+      }
+      none.classList.add("d-none");
+      detail.classList.remove("d-none");
+
+      document.getElementById("detailName").textContent = patient.nameEn;
+      document.getElementById(
+        "detailId"
+      ).textContent = `${patient.id || ""} · ${
+        patient.phone || ""
+      }`.trim();
+
+      const dob = patient.dob ? `DOB: ${patient.dob}` : "";
+      const sex = patient.sex ? `Sex: ${patient.sex}` : "";
+      const city = patient.city ? `City: ${patient.city}` : "";
+      document.getElementById(
+        "detailDemographics"
+      ).textContent = [dob, sex, city].filter(Boolean).join(" · ");
+
+      document.getElementById("chatgptPrompt").value = "";
+      document.getElementById("aiSummaryEn").value = "";
+      document.getElementById("aiSummaryAr").value = "";
+      document.getElementById("aiSummaryKu").value = "";
+      document.getElementById("aiError").textContent = "";
+      currentVisitIdForOrders = null;
+      lastSelectedVisit = null;
+      renderVisitsForPatient();
+      renderOrdersForVisit();
+    }
+
+    // ====== VISITS ======
+    function renderVisitsForPatient() {
+      const container = document.getElementById("visitList");
+      container.innerHTML = "";
+      if (!selectedPatientId) return;
+      const patientVisits = visits
+        .filter((v) => v.patientId === selectedPatientId)
+        .sort((a, b) => (a.date || "").localeCompare(b.date));
+
+      if (!patientVisits.length) {
+        container.innerHTML =
+          '<div class="text-muted small">No visits recorded yet.</div>';
+        return;
+      }
+
+      patientVisits.forEach((v) => {
+        const card = document.createElement("div");
+        card.className = "card visit-card";
+        card.innerHTML = `
+          <div class="card-body py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <div class="fw-semibold">${v.date || ""} – ${v.type || ""}</div>
+                <div class="small text-muted">${v.cc || ""}</div>
+              </div>
+              <button class="btn btn-outline-secondary btn-sm">Details</button>
+            </div>
+          </div>
+        `;
+        card
+          .querySelector("button")
+          .addEventListener("click", () => showVisitPrompt(v));
+        container.prepend(card); // newest on top
+      });
+    }
+
+    function makeClinicalNoteText(patient, v) {
+      return `
+PATIENT:
+- Name: ${patient ? patient.nameEn : ""}
+- ID: ${patient ? patient.id : ""}
+
+CLINICAL NOTE:
+- Date: ${v.date}
+- Visit type: ${v.type}
+- Chief complaint: ${v.cc}
+
+HPI:
+${v.hpi}
+
+PAST MEDICAL HISTORY:
+${(v.pastMedical || "").trim() || (!hasAnyNewHistoryFields(v) ? legacyCombinedHistory(v) : "")}
+
+MEDICATIONS:
+${(v.medications || "").trim() || (!hasAnyNewHistoryFields(v) ? legacyCombinedHistory(v) : "")}
+
+ALLERGIES:
+${(v.allergies || "").trim() || (!hasAnyNewHistoryFields(v) ? legacyCombinedHistory(v) : "")}
+
+FAMILY HISTORY:
+${(v.familyHistory || "").trim()}
+
+SOCIAL HISTORY:
+${(v.socialHistory || "").trim()}
+
+IMMUNIZATION HISTORY:
+${(v.immunizations || "").trim()}
+
+EDUCATION RESOURCES PROVIDED:
+${v.eduProvided || "No"}
+Language: ${v.eduLanguage || ""}
+Type: ${v.eduType || ""}
+Details: ${(v.eduDetails || "").trim()}
+
+Vitals:
+${v.vitals}
+
+Exam (GI and other):
+${v.exam}
+${v.otherExam}
+
+Impression / diagnosis:
+${v.impression}
+
+Plan – Investigations:
+${v.planInvestigations}
+
+Plan – Medications:
+${v.planMeds}
+
+Plan – Diet / counseling / follow-up:
+${v.planCounsel}
+`;
+    }
+
+    function showVisitPrompt(v) {
+      const patient = getPatientById(v.patientId);
+      currentVisitIdForOrders = v.id;
+      lastSelectedVisit = v;
+      renderOrdersForVisit();
+
+      const text = `
+You are a pediatric gastroenterologist helping a parent understand their child’s clinic visit.
+
+Using the clinical note below, write THREE separate, parent-friendly summaries of this visit:
+
+1) In ENGLISH.
+2) In MODERN STANDARD ARABIC.
+3) In KURDISH (clear, polite language understood by most patients in Iraqi Kurdistan).
+
+For each language, use these headings (translate the headings appropriately in Arabic and Kurdish):
+- Diagnosis
+- What we think is going on
+- Treatment / Medications
+- Tests and follow-up
+- Red flags (when to go to ER or contact doctor)
+
+Please avoid medical jargon where possible and keep the style reassuring and clear.
+
+${makeClinicalNoteText(patient, v)}
+`;
+      document.getElementById("chatgptPrompt").value = text.trim();
+    }
+
+    // ====== ORDERS ======
+    function renderOrdersForVisit() {
+      const listEl = document.getElementById("orderList");
+      if (!listEl) return;
+      listEl.innerHTML = "";
+      if (!currentVisitIdForOrders) {
+        listEl.innerHTML =
+          '<div class="text-muted small">No visit selected yet. Click "Details" on a visit.</div>';
+        return;
+      }
+      const thisOrders = orders.filter(
+        (o) => o.visitId === currentVisitIdForOrders
+      );
+      if (!thisOrders.length) {
+        listEl.innerHTML =
+          '<div class="text-muted small">No orders for this visit yet.</div>';
+        return;
+      }
+      thisOrders
+        .slice()
+        .sort((a, b) =>
+          (a.orderedDate || "").localeCompare(b.orderedDate || "")
+        )
+        .forEach((o) => {
+          const div = document.createElement("div");
+          div.className = "border rounded p-1 mb-1";
+          div.innerHTML = `
+            <div><strong>${o.type}</strong> – ${o.name || ""}</div>
+            <div>${o.orderedDate || ""} · Status: ${o.status || ""}</div>
+            ${
+              o.resultDate || o.resultText
+                ? `<div class="text-muted">Result: ${o.resultDate || ""} ${
+                    o.resultText ? "– " + o.resultText : ""
+                  }</div>`
+                : ""
+            }
+          `;
+          listEl.appendChild(div);
+        });
+    }
+// ====== PDF HELPERS (jsPDF) ======
+    async function loadImageAsDataURL(url) {
+  try {
+    const res = await fetch(url, { cache: "force-cache" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const blob = await res.blob();
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    console.warn("Could not load image for PDF:", url, e);
+    return null;
+  }
+}
+function sanitizeFilename(s) {
+  return (s || "")
+    .toString()
+    .trim()
+    .replace(/\s+/g, "_")
+    .replace(/[\/\\:*?"<>|]+/g, "")   // remove illegal filename chars
+    .replace(/_+/g, "_");
+}
+
+function buildSelectedVisitSummaryText() {
+  if (!lastSelectedVisit) return "";
+
+  const v = lastSelectedVisit;
+  const p = getPatientById(v.patientId);
+
+  const lines = [];
+  lines.push("AL FARABI PEDIATRIC GI – VISIT SUMMARY");
+  lines.push("");
+// ====== PDF BRANDING CACHE (load once) ======
+const PDF_BRANDING = {
+  logoUrl: new URL("../images/avicenna-logo-horizontal.png", window.location.href).href,
+  emblemUrl: new URL("../images/avicenna-emblem.png", window.location.href).href,
+  logoData: null,
+  emblemData: null,
+  loaded: false
+};
+
+async function ensurePdfBrandingLoaded() {
+  if (PDF_BRANDING.loaded) return;
+  PDF_BRANDING.logoData = await loadImageAsDataURL(PDF_BRANDING.logoUrl);
+  PDF_BRANDING.emblemData = await loadImageAsDataURL(PDF_BRANDING.emblemUrl);
+  PDF_BRANDING.loaded = true;
+}
+
+  // Patient
+  lines.push("PATIENT");
+  lines.push("Name: " + ((p && p.nameEn) ? p.nameEn : ""));
+  lines.push("Patient ID: " + ((p && p.id) ? p.id : ""));
+  lines.push(
+    "DOB: " + ((p && p.dob) ? p.dob : "N/A") +
+    "    Sex: " + ((p && p.sex) ? p.sex : "") +
+    "    City: " + ((p && p.city) ? p.city : "")
+  );
+  if (p && p.phone) lines.push("Phone: " + p.phone);
+  lines.push("");
+  
+ 
+  // Visit
+  lines.push("VISIT");
+  lines.push(`Date: ${v.date || ""}`);
+  lines.push(`Type: ${v.type || ""}`);
+  lines.push(`Chief complaint: ${v.cc || ""}`);
+  lines.push("");
+
+  if (v.hpi) { lines.push("HPI"); lines.push(v.hpi); lines.push(""); }
+  // History blocks (new fields preferred, legacy fallback if old visit)
+const legacy = legacyCombinedHistory(v);
+
+if (v.pastMedical || (!hasAnyNewHistoryFields(v) && legacy)) {
+  lines.push("PAST MEDICAL HISTORY");
+  lines.push((v.pastMedical && v.pastMedical.trim()) ? v.pastMedical : legacy);
+  lines.push("");
+}
+if (v.medications || (!hasAnyNewHistoryFields(v) && legacy)) {
+  lines.push("MEDICATIONS");
+  lines.push((v.medications && v.medications.trim()) ? v.medications : legacy);
+  lines.push("");
+}
+if (v.allergies || (!hasAnyNewHistoryFields(v) && legacy)) {
+  lines.push("ALLERGIES");
+  lines.push((v.allergies && v.allergies.trim()) ? v.allergies : legacy);
+  lines.push("");
+}
+
+if (v.familyHistory) { lines.push("FAMILY HISTORY"); lines.push(v.familyHistory); lines.push(""); }
+if (v.socialHistory) { lines.push("SOCIAL HISTORY"); lines.push(v.socialHistory); lines.push(""); }
+if (v.immunizations) { lines.push("IMMUNIZATION HISTORY"); lines.push(v.immunizations); lines.push(""); }
+
+// Education
+if ((v.eduProvided && v.eduProvided === "Yes") || (v.eduDetails && v.eduDetails.trim())) {
+  lines.push("EDUCATION / RESOURCES");
+  lines.push(`Provided: ${v.eduProvided || "No"}`);
+  if (v.eduLanguage) lines.push(`Language: ${v.eduLanguage}`);
+  if (v.eduType) lines.push(`Type: ${v.eduType}`);
+  if (v.eduDetails) lines.push(`Details: ${v.eduDetails}`);
+  lines.push("");
+}
+  if (v.vitals) { lines.push("VITALS"); lines.push(v.vitals); lines.push(""); }
+  if (v.exam || v.otherExam) {
+    lines.push("EXAM");
+    if (v.exam) lines.push(v.exam);
+    if (v.otherExam) lines.push("Other: " + v.otherExam);
+    lines.push("");
+  }
+  if (v.impression) { lines.push("IMPRESSION / DIAGNOSIS"); lines.push(v.impression); lines.push(""); }
+  if (v.planInvestigations) { lines.push("PLAN – INVESTIGATIONS"); lines.push(v.planInvestigations); lines.push(""); }
+  if (v.planMeds) { lines.push("PLAN – MEDICATIONS"); lines.push(v.planMeds); lines.push(""); }
+  if (v.planCounsel) { lines.push("PLAN – DIET / COUNSELING / FOLLOW-UP"); lines.push(v.planCounsel); lines.push(""); }
+  if (v.followInterval || v.nextDate) {
+    lines.push(`FOLLOW-UP: ${v.followInterval || "PRN"}    Next date: ${v.nextDate || ""}`);
+    lines.push("");
+  }
+
+  // Orders for this visit
+  const vOrders = orders.filter((o) => o.visitId === v.id);
+  if (vOrders.length) {
+    lines.push("ORDERS (LABS / IMAGING / SCOPES)");
+    vOrders.forEach((o) => {
+      lines.push(`- ${o.type}: ${o.name || ""}`);
+      lines.push(`  Ordered: ${o.orderedDate || ""} | Status: ${o.status || ""}`);
+      if (o.resultDate || o.resultText) {
+        lines.push(`  Result: ${o.resultDate || ""}${o.resultText ? " – " + o.resultText : ""}`);
+      }
+    });
+    lines.push("");
+  }
+
+  
+  lines.push("");
+  
+  lines.push("Sincerely,");
+  lines.push("");
+
+
+  
+  lines.push("______________________________");
+  lines.push("Dr. Mohammad Hussein, MD, FRCPC (Canada)");
+  lines.push("Pediatric Gastroenterologist");
+  
+  return lines.join("\n");
+}
+
+async function downloadPdfFromText(text, filename, patientObj, visitObj) {
+  // jsPDF loaded?
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert("PDF library (jsPDF) did not load. Check internet connection.");
+    return;
+  }
+
+  if (!text || !text.trim()) {
+    alert("No visit selected. Click Details on a visit first.");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+
+const marginLeft = 40;
+const marginRight = 40;
+const marginTop = 40;
+const marginBottom = 20;
+
+const usableWidth = pageWidth - marginLeft - marginRight;
+
+// Header/Footer sizing
+const headerH = 120;
+const footerH = 55;
+const contentTop = marginTop + headerH;                 // ✅ correct
+const contentBottom = pageHeight - footerH - marginBottom;
+
+  // Image URLs (IMPORTANT: from /emr/ to /images/ use ../images/)
+  const logoUrl = "../images/avicenna-logo-horizontal.png";
+  const emblemUrl = "../images/avicenna-emblem.png";
+
+  // Load images as dataURLs
+  const logoData = await loadImageAsDataURL(logoUrl);
+  const emblemData = await loadImageAsDataURL(emblemUrl);
+
+  function drawHeader(pageNum) {
+    // light header background
+    doc.setFillColor(224, 248, 250);
+    doc.rect(0, 0, pageWidth, headerH, "F");
+// ===== WATERMARK (behind content) =====
+    doc.saveGraphicsState();
+    doc.setTextColor(210, 210, 210);      // light gray
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(48);
+    doc.setGState(new doc.GState({ opacity: 0.12 })); // subtle transparency
+
+    // diagonal watermark across page
+    
+
+// Watermark #2 (center)
+doc.text("AVICENNA MEDICAL INC.", pageWidth / 2, pageHeight * 0.55, {
+  align: "center",
+  angle: 35
+});
+
+// Watermark #3 (lower)
+doc.text("AVICENNA MEDICAL INC.", pageWidth / 2, pageHeight * 0.80, {
+  align: "center",
+  angle: 35
+});
+    doc.restoreGraphicsState();
+    // Logo
+    if (logoData) {
+      // x, y, w, h
+      // Logo (keep aspect ratio, not squished)
+if (logoData) {
+  const props = doc.getImageProperties(logoData);
+  const logoW = 190; // desired width
+  const logoH = (props.height * logoW) / props.width; // preserve ratio
+  doc.addImage(logoData, props.fileType || "PNG", marginLeft, -12,  logoW, logoH);
+}
+    }
+
+    // Title block
+    doc.setTextColor(20, 20, 20);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.text("Al Farabi Pediatric GI – Visit Summary", marginLeft, 90);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(90, 90, 90);
+    doc.text("Avicenna Medical Inc. · Al Farabi Gastroenterology & Endoscopy Centre", marginLeft, 105);
+
+    // Right side (visit)
+    const vDate = (visitObj && visitObj.date) ? visitObj.date : "";
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(30, 30, 30);
+    doc.text("Date: " + vDate, pageWidth - marginRight - 150, 35);
+
+    // separator line
+    doc.setDrawColor(220, 220, 220);
+    doc.line(marginLeft, headerH, pageWidth - marginRight, headerH);
+  }
+
+  function drawFooter(pageNum, pageCount) {
+    // Footer background (light turquoise)
+    doc.setFillColor(224, 247, 250);
+    doc.rect(0, pageHeight - footerH, pageWidth, footerH, "F");
+    
+    // separator line
+    doc.setDrawColor(220, 220, 220);
+    doc.line(marginLeft, pageHeight - footerH, pageWidth - marginRight, pageHeight - footerH);
+
+    // Emblem
+    if (emblemData) {
+      doc.addImage(emblemData, "PNG", marginLeft, pageHeight - footerH + 12, 24, 24);
+    }
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(90, 90, 90);
+
+    doc.text(
+      "Avicenna Medical INC, Al Farabi Gastroenterology& Endoscopy Center, Diyala Branch, Iraq",
+      marginLeft + 32,
+      pageHeight - footerH + 26
+    );
+
+    doc.text(
+      " WhatsApp/Phone: +964 772-173-8755 · info@avicennamedical.org · avicennamedical.org",
+      marginLeft + 32,
+      pageHeight - footerH + 40
+    );
+
+    doc.setTextColor(120, 120, 120);
+    doc.text("Page " + pageNum + " of " + pageCount, pageWidth - marginRight - 70, pageHeight - footerH + 40);
+  }
+
+  // Prepare content lines
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.setTextColor(20, 20, 20);
+
+  const lines = doc.splitTextToSize(text, usableWidth);
+  const lineHeight = 14;
+
+  let y = contentTop;
+  let pageNum = 1;
+
+  // First page header
+  drawHeader(pageNum);
+
+  for (let i = 0; i < lines.length; i++) {
+    if (y + lineHeight > contentBottom) {
+      doc.addPage();
+      pageNum++;
+      drawHeader(pageNum);
+      y = contentTop;
+    }
+    doc.text(lines[i], marginLeft, y);
+    y += lineHeight;
+  }
+
+  // Footer needs total page count
+  const pageCount = doc.getNumberOfPages();
+  for (let p = 1; p <= pageCount; p++) {
+    doc.setPage(p);
+    drawFooter(p, pageCount);
+  }
+
+  doc.save(filename);
+}
+    // ====== EXPORT PATIENT HISTORY ======
+    function buildPatientHistoryText(patientId) {
+      const p = getPatientById(patientId);
+      if (!p) return "";
+      const lines = [];
+      lines.push(`PATIENT DEMOGRAPHICS`);
+      lines.push(`Name (English): ${p.nameEn || ""}`);
+      if (p.nameAr) lines.push(`Name (Arabic): ${p.nameAr}`);
+      if (p.nameKu) lines.push(`Name (Kurdish): ${p.nameKu}`);
+      lines.push(`Patient ID: ${p.id || ""}`);
+      lines.push(
+        `DOB: ${p.dob || "N/A"}    Sex: ${p.sex || ""}    City: ${
+          p.city || ""
+        }`
+      );
+      if (p.phone) lines.push(`Phone / WhatsApp: ${p.phone}`);
+      if (p.referral) lines.push(`Referral source: ${p.referral}`);
+      if (p.caregiver || p.caregiverRel)
+        lines.push(
+          `Primary caregiver: ${p.caregiver || ""} (${p.caregiverRel || ""})`
+        );
+      if (p.notes) lines.push(`Notes / Flags: ${p.notes}`);
+      lines.push("");
+      lines.push("CLINIC VISITS");
+      const pVisits = visits
+        .filter((v) => v.patientId === patientId)
+        .sort((a, b) => (a.date || "").localeCompare(b.date));
+      if (!pVisits.length) {
+        lines.push("No visits recorded.");
+      } else {
+        pVisits.forEach((v, idx) => {
+          lines.push("");
+          lines.push(
+            `Visit ${idx + 1}: ${v.date || ""} – ${v.type || ""} – ${
+              v.cc || ""
+            }`
+          );
+          if (v.hpi) lines.push(`HPI: ${v.hpi}`);
+          const legacy = legacyCombinedHistory(v);
+if (hasAnyNewHistoryFields(v)) {
+  if (v.pastMedical) lines.push(`Past medical history: ${v.pastMedical}`);
+  if (v.medications) lines.push(`Medications: ${v.medications}`);
+  if (v.allergies) lines.push(`Allergies: ${v.allergies}`);
+  if (v.familyHistory) lines.push(`Family history: ${v.familyHistory}`);
+  if (v.socialHistory) lines.push(`Social history: ${v.socialHistory}`);
+  if (v.immunizations) lines.push(`Immunizations: ${v.immunizations}`);
+} else if (legacy) {
+  lines.push(`Past history / Meds / Allergies: ${legacy}`);
+}
+
+if ((v.eduProvided && v.eduProvided === "Yes") || (v.eduDetails && v.eduDetails.trim())) {
+  lines.push(`Education provided: ${v.eduProvided || "No"}`);
+  if (v.eduLanguage) lines.push(`Education language: ${v.eduLanguage}`);
+  if (v.eduType) lines.push(`Education type: ${v.eduType}`);
+  if (v.eduDetails) lines.push(`Education details: ${v.eduDetails}`);
+}
+          if (v.vitals) lines.push(`Vitals: ${v.vitals}`);
+          if (v.exam || v.otherExam)
+            lines.push(
+              `Exam: ${v.exam || ""}${
+                v.otherExam ? " | Other: " + v.otherExam : ""
+              }`
+            );
+          if (v.impression) lines.push(`Impression / Diagnosis: ${v.impression}`);
+          if (v.planInvestigations)
+            lines.push(`Plan – Investigations: ${v.planInvestigations}`);
+          if (v.planMeds) lines.push(`Plan – Medications: ${v.planMeds}`);
+          if (v.planCounsel)
+            lines.push(`Plan – Diet / Counseling / Follow-up: ${v.planCounsel}`);
+          if (v.followInterval || v.nextDate)
+            lines.push(
+              `Follow-up: ${v.followInterval || ""}  Next appointment: ${
+                v.nextDate || ""
+              }`
+            );
+
+          // orders for this visit
+          const vOrders = orders.filter((o) => o.visitId === v.id);
+          if (vOrders.length) {
+            lines.push("Orders for this visit:");
+            vOrders.forEach((o) => {
+              lines.push(
+                `  - ${o.type}: ${o.name || ""} | Ordered: ${
+                  o.orderedDate || ""
+                } | Status: ${o.status || ""}${
+                  o.resultDate || o.resultText
+                    ? ` | Result: ${o.resultDate || ""}${
+                        o.resultText ? " – " + o.resultText : ""
+                      }`
+                    : ""
+                }`
+              );
+            });
+          }
+        });
+      }
+      return lines.join("\n");
+    }
+
+function safePdfFilenameFromPatient(p) {
+  const name = sanitizeFilename((p && p.nameEn) ? p.nameEn : "Patient");
+  const id = sanitizeFilename((p && p.id) ? p.id : "ID");
+  return `${name}__${id}.pdf`;
+}
+
+// Lightweight PDF generator (text-only) to avoid tablet crashes
+function makePdfBlobFromText_simple(text) {
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    throw new Error("jsPDF not loaded");
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+
+  const marginLeft = 40;
+  const marginRight = 40;
+  const marginTop = 50;
+  const marginBottom = 40;
+
+  const usableWidth = pageWidth - marginLeft - marginRight;
+  const usableHeight = pageHeight - marginTop - marginBottom;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+
+  const lines = doc.splitTextToSize(text, usableWidth);
+  const lineHeight = 14;
+
+  let x = marginLeft;
+  let y = marginTop;
+
+  for (let i = 0; i < lines.length; i++) {
+    if (y + lineHeight > marginTop + usableHeight) {
+      doc.addPage();
+      y = marginTop;
+    }
+    doc.text(lines[i], x, y);
+    y += lineHeight;
+  }
+
+  return doc.output("blob");
+}
+async function exportAllPatientsAsPdfZip(startIndex = 1, batchSize = 25) {
+  if (!window.JSZip) {
+    alert("JSZip library not loaded.");
+    return;
+  }
+  if (!window.saveAs) {
+    alert("FileSaver library not loaded.");
+    return;
+  }
+  if (!patients || !patients.length) {
+    alert("No patients to export.");
+    return;
+  }
+
+  // Sort patients (optional but keeps consistent order)
+  const sortedPatients = patients
+    .slice()
+    .sort((a, b) => (a.nameEn || "").localeCompare(b.nameEn || ""));
+
+  // Convert to 0-based
+  const start0 = Math.max(0, (parseInt(startIndex, 10) || 1) - 1);
+  const size = Math.max(1, parseInt(batchSize, 10) || 25);
+
+  const batch = sortedPatients.slice(start0, start0 + size);
+
+  if (!batch.length) {
+    alert("Nothing to export for this start number. Adjust Start #.");
+    return;
+  }
+
+  const confirm1 = confirm(
+    `This will generate ${batch.length} PDFs (patients ${start0 + 1} to ${start0 + batch.length}) and package them into a ZIP.\n\nOn some devices, use 10–25 per batch.\n\nContinue?`
+  );
+  if (!confirm1) return;
+
+  const zip = new JSZip();
+  const folder = zip.folder("AlFarabi_Patient_PDFs");
+
+  const btn = document.getElementById("btnExportAllPatientsZip");
+  const oldLabel = btn ? btn.textContent : "";
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "Working... 0%";
+  }
+
+  try {
+    for (let i = 0; i < batch.length; i++) {
+      const p = batch[i];
+      const text = buildPatientHistoryText(p.id);
+
+      // keep your current safe/simple PDF generator
+      const pdfBlob = makePdfBlobFromText_simple(text);
+
+      const filename = safePdfFilenameFromPatient(p);
+      folder.file(filename, pdfBlob);
+
+      if (btn) {
+        const pct = Math.round(((i + 1) / batch.length) * 100);
+        btn.textContent = `Working... ${pct}%`;
+      }
+
+      // Yield to browser every 10 files
+      if ((i + 1) % 10 === 0) {
+        await new Promise((r) => setTimeout(r, 0));
+      }
+    }
+
+    if (btn) btn.textContent = "Zipping...";
+
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    const stamp = new Date().toISOString().slice(0, 10);
+    saveAs(
+      zipBlob,
+      `AlFarabi_PDFs_${stamp}_patients_${start0 + 1}_to_${start0 + batch.length}.zip`
+    );
+
+    alert("✅ ZIP downloaded.");
+  } catch (e) {
+    console.error(e);
+    alert("❌ Export failed. Try batch size 10 or 25.");
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = oldLabel || "Export batch (PDF ZIP)";
+    }
+  }
+}
+
+  
+
+    // ====== INIT EMR APP (after PIN) ======
+    let emrInitialized = false;
+
+    function initEmrApp() {
+      if (emrInitialized) return;
+      emrInitialized = true;
+
+      loadData();
+      renderPatients();
+
+      // patient search
+      document
+        .getElementById("patientSearch")
+        .addEventListener("input", (e) => {
+          renderPatients(e.target.value);
+        });
+
+// Export ALL patients as PDF ZIP
+const exportBtn = document.getElementById("btnExportAllPatientsZip");
+if (exportBtn) {
+  exportBtn.addEventListener("click", () => {
+    const sizeEl = document.getElementById("exportBatchSize");
+    const startEl = document.getElementById("exportStartIndex");
+
+    const batchSize = sizeEl ? sizeEl.value : 25;
+    const startIndex = startEl ? startEl.value : 1;
+
+    exportAllPatientsAsPdfZip(startIndex, batchSize);
+  });
+}
+
+      // patient modal show
+      document
+        .getElementById("patientModal")
+        .addEventListener("show.bs.modal", () => {
+          const editIndexInput = document.getElementById("patEditIndex");
+          if (editIndexInput.value) {
+            document.getElementById("patientModalTitle").textContent =
+              "Edit Patient";
+          } else {
+            document.getElementById("patientModalTitle").textContent =
+              "New Patient";
+            document.getElementById("patientForm").reset();
+          }
+        });
+
+      // edit patient button
+      document.getElementById("btnEditPatient").addEventListener("click", () => {
+        const patient = getPatientById(selectedPatientId);
+        if (!patient) return;
+        document.getElementById("patId").value = patient.id || "";
+        document.getElementById("patNameEn").value = patient.nameEn || "";
+        document.getElementById("patNameAr").value = patient.nameAr || "";
+        document.getElementById("patNameKu").value = patient.nameKu || "";
+        document.getElementById("patDob").value = patient.dob || "";
+        document.getElementById("patSex").value = patient.sex || "";
+        document.getElementById("patPhone").value = patient.phone || "";
+        document.getElementById("patCity").value = patient.city || "";
+        document.getElementById("patReferral").value = patient.referral || "";
+        document.getElementById("patCaregiver").value = patient.caregiver || "";
+        document.getElementById("patCaregiverRel").value =
+          patient.caregiverRel || "";
+        document.getElementById("patNotes").value = patient.notes || "";
+        document.getElementById("patEditIndex").value = patients.findIndex(
+          (p) => p.id === selectedPatientId
+        );
+        const modal = new bootstrap.Modal(
+          document.getElementById("patientModal")
+        );
+        modal.show();
+      });
+
+      // export patient history
+      document
+        .getElementById("btnExportPatient")
+        .addEventListener("click", () => {
+          if (!selectedPatientId) {
+            alert("Select a patient first.");
+            return;
+          }
+          const text = buildPatientHistoryText(selectedPatientId);
+          document.getElementById("patientExportText").value = text;
+          const modal = new bootstrap.Modal(
+            document.getElementById("patientExportModal")
+          );
+          modal.show();
+        });
+
+      document
+        .getElementById("btnCopyPatientExport")
+        .addEventListener("click", () => {
+          const txt = document.getElementById("patientExportText").value;
+          if (!txt) return;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard
+              .writeText(txt)
+              .then(() => alert("History copied to clipboard."))
+              .catch(() =>
+                alert("Unable to copy automatically. Select and copy manually.")
+              );
+          } else {
+            alert("Select the text manually and copy.");
+          }
+        });
+
+      // patient form submit
+      document
+        .getElementById("patientForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          const id = document.getElementById("patId").value.trim();
+          const nameEn = document.getElementById("patNameEn").value.trim();
+          if (!id || !nameEn) return;
+
+          const patientData = {
+            id,
+            nameEn,
+            nameAr: document.getElementById("patNameAr").value.trim(),
+            nameKu: document.getElementById("patNameKu").value.trim(),
+            dob: document.getElementById("patDob").value,
+            sex: document.getElementById("patSex").value,
+            phone: document.getElementById("patPhone").value.trim(),
+            city: document.getElementById("patCity").value.trim(),
+            referral: document.getElementById("patReferral").value.trim(),
+            caregiver: document.getElementById("patCaregiver").value.trim(),
+            caregiverRel: document
+              .getElementById("patCaregiverRel")
+              .value.trim(),
+            notes: document.getElementById("patNotes").value.trim(),
+          };
+
+          const editIndex = document.getElementById("patEditIndex").value;
+          if (editIndex !== "") {
+            patients[parseInt(editIndex, 10)] = patientData;
+          } else {
+            patients.push(patientData);
+          }
+          saveData();
+          document.getElementById("patEditIndex").value = "";
+          renderPatients(document.getElementById("patientSearch").value);
+          selectedPatientId = id;
+          showPatientDetail();
+          bootstrap.Modal.getInstance(
+            document.getElementById("patientModal")
+          ).hide();
+        });
+
+      // visit form submit
+      document
+        .getElementById("visitForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          if (!selectedPatientId) return;
+
+          const v = {
+            id:
+              "V-" +
+              Date.now().toString(36) +
+              "-" +
+              Math.random().toString(36).slice(2, 6),
+            patientId: selectedPatientId,
+            date: document.getElementById("visitDate").value,
+            type: document.getElementById("visitType").value,
+            cc: document.getElementById("visitCC").value.trim(),
+            hpi: document.getElementById("visitHPI").value.trim(),
+            pastMedical: document.getElementById("visitPastMedical").value.trim(),
+medications: document.getElementById("visitMedications").value.trim(),
+allergies: document.getElementById("visitAllergies").value.trim(),
+immunizations: document.getElementById("visitImmunizations").value.trim(),
+familyHistory: document.getElementById("visitFamilyHistory").value.trim(),
+socialHistory: document.getElementById("visitSocialHistory").value.trim(),
+
+// education
+eduProvided: document.getElementById("visitEduProvided").value,
+eduLanguage: document.getElementById("visitEduLanguage").value,
+eduType: document.getElementById("visitEduType").value,
+eduDetails: document.getElementById("visitEduDetails").value.trim(),
+            vitals: document.getElementById("visitVitals").value.trim(),
+            exam: document.getElementById("visitExam").value.trim(),
+            otherExam: document.getElementById("visitOtherExam").value.trim(),
+            impression: document.getElementById("visitImpression").value.trim(),
+            planInvestigations: document
+              .getElementById("visitPlanInvestigations")
+              .value.trim(),
+            planMeds: document
+              .getElementById("visitPlanMeds")
+              .value.trim(),
+            planCounsel: document
+              .getElementById("visitPlanCounsel")
+              .value.trim(),
+            followInterval: document.getElementById("visitFollowInterval").value,
+            nextDate: document.getElementById("visitNextDate").value,
+          };
+
+          visits.push(v);
+          saveData();
+          document.getElementById("visitForm").reset();
+          renderVisitsForPatient();
+          showVisitPrompt(v); // prepare prompt + orders panel
+        });
+
+      // order form submit
+      document
+        .getElementById("orderForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          if (!selectedPatientId || !currentVisitIdForOrders) {
+            alert("Please select a visit (click Details) before adding an order.");
+            return;
+          }
+          const o = {
+            id:
+              "O-" +
+              Date.now().toString(36) +
+              "-" +
+              Math.random().toString(36).slice(2, 6),
+            patientId: selectedPatientId,
+            visitId: currentVisitIdForOrders,
+            type: document.getElementById("orderType").value,
+            name: document.getElementById("orderName").value.trim(),
+            orderedDate: document.getElementById("orderDate").value,
+            status: document.getElementById("orderStatus").value,
+            resultDate: document.getElementById("orderResultDate").value,
+            resultText: document
+              .getElementById("orderResultText")
+              .value.trim(),
+          };
+          orders.push(o);
+          saveData();
+          document.getElementById("orderForm").reset();
+          renderOrdersForVisit();
+        });
+// RESET EMR button
+document.getElementById("btnResetEmr").addEventListener("click", () => {
+  resetEmrDataHard();
+});
+      // export backup
+      document.getElementById("btnExport").addEventListener("click", () => {
+        const data = {
+          patients,
+          visits,
+          orders,
+          exportedAt: new Date().toISOString(),
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "al_farabi_emr_backup.json";
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      // import backup
+      document
+        .getElementById("importFile")
+        .addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            try {
+              const obj = JSON.parse(ev.target.result);
+              if (obj.patients && obj.visits) {
+                patients = obj.patients;
+                visits = obj.visits;
+                orders = obj.orders || [];
+                saveData();
+                renderPatients();
+                selectedPatientId = null;
+                document.getElementById("patientDetail").classList.add("d-none");
+                document.getElementById("noPatientSelected").classList.remove("d-none");
+                alert("Backup restored successfully.");
+              } else {
+                alert("Invalid backup file.");
+              }
+            } catch (err) {
+              alert("Error reading backup file.");
+            }
+          };
+          reader.readAsText(file);
+          e.target.value = "";
+        });
+
+      // copy manual ChatGPT prompt
+      document.getElementById("btnCopyPrompt").addEventListener("click", () => {
+        const txt = document.getElementById("chatgptPrompt").value;
+        if (!txt) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(txt)
+            .then(() =>
+              alert(
+                "Prompt copied. Paste into ChatGPT to generate EN/AR/KU summaries."
+              )
+            )
+            .catch(() =>
+              alert("Unable to copy. Select the text manually and copy.")
+            );
+        } else {
+          alert("Select the text manually and copy.");
+        }
+      });
+// Save selected visit as PDF (forced filename)
+document.getElementById("btnPdfSelectedVisit").addEventListener("click", async () => {
+  if (!lastSelectedVisit) {
+    alert("Select a visit first (click 'Details' on the visit).");
+    return;
+  }
+
+  const p = getPatientById(lastSelectedVisit.patientId);
+
+  const name = sanitizeFilename((p && p.nameEn) ? p.nameEn : "Patient");
+  const dob  = sanitizeFilename((p && p.dob) ? p.dob : "DOB-unknown");
+  const vdate = sanitizeFilename((lastSelectedVisit && lastSelectedVisit.date) ? lastSelectedVisit.date : "VisitDate-unknown");
+
+  const filename = `${name}__DOB-${dob}__Visit-${vdate}.pdf`;
+  const text = buildSelectedVisitSummaryText();
+
+  await downloadPdfFromText(text, filename, p, lastSelectedVisit);
+});
+      // AI SUMMARY BUTTON
+      document
+        .getElementById("btnGenerateAiSummary")
+        .addEventListener("click", async () => {
+          const errorEl = document.getElementById("aiError");
+          errorEl.textContent = "";
+          if (!AI_SUMMARY_ENDPOINT) {
+            errorEl.textContent =
+              "AI endpoint not configured yet. Set AI_SUMMARY_ENDPOINT in the HTML after you deploy the Cloudflare Worker.";
+            return;
+          }
+          if (!lastSelectedVisit) {
+            errorEl.textContent =
+              "Select a visit first (click 'Details' on the visit).";
+            return;
+          }
+          const patient = getPatientById(lastSelectedVisit.patientId);
+          const note = makeClinicalNoteText(patient, lastSelectedVisit);
+          try {
+            errorEl.textContent = "Contacting AI backend...";
+            const res = await fetch(AI_SUMMARY_ENDPOINT, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ note }),
+            });
+            if (!res.ok) {
+              throw new Error("HTTP " + res.status);
+            }
+            const data = await res.json();
+            document.getElementById("aiSummaryEn").value =
+              data.english || data.en || "";
+            document.getElementById("aiSummaryAr").value =
+              data.arabic || data.ar || "";
+            document.getElementById("aiSummaryKu").value =
+              data.kurdish || data.ku || "";
+            errorEl.textContent = "";
+          } catch (err) {
+            console.error(err);
+            errorEl.textContent =
+              "Error calling AI backend. Check your Worker URL and console log.";
+          }
+        });
+
+      // copy AI summaries
+      function copyTextById(id, label) {
+        const txt = document.getElementById(id).value;
+        if (!txt) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(txt)
+            .then(() => alert(label + " copied."))
+            .catch(() =>
+              alert("Unable to copy automatically. Select and copy manually.")
+            );
+        } else {
+          alert("Select the text manually and copy.");
+        }
+      }
+      document
+        .getElementById("btnCopyAiEn")
+        .addEventListener("click", () => copyTextById("aiSummaryEn", "English summary"));
+      document
+        .getElementById("btnCopyAiAr")
+        .addEventListener("click", () => copyTextById("aiSummaryAr", "Arabic summary"));
+      document
+        .getElementById("btnCopyAiKu")
+        .addEventListener("click", () => copyTextById("aiSummaryKu", "Kurdish summary"));
+    }
+
+    // ====== PIN LOCK LOGIC ======
+    let existingPin = null;
+
+    function configureLockScreen() {
+      existingPin = localStorage.getItem(PIN_KEY);
+      const hasPin = !!existingPin;
+      const title = document.getElementById("lockTitle");
+      const subtitle = document.getElementById("lockSubtitle");
+      const label = document.getElementById("lockLabel");
+      const confirmGroup = document.getElementById("lockConfirmGroup");
+      const btn = document.getElementById("lockBtn");
+
+      if (hasPin) {
+        title.textContent = "Enter PIN to unlock EMR";
+        subtitle.textContent =
+          "This helps protect access on this device. Use your private PIN.";
+        label.textContent = "PIN";
+        confirmGroup.classList.add("d-none");
+        btn.textContent = "Unlock";
+      } else {
+        title.textContent = "Set up a PIN for this EMR";
+        subtitle.textContent =
+          "Choose a 4–8 digit PIN to protect access on this device.";
+        label.textContent = "New PIN";
+        confirmGroup.classList.remove("d-none");
+        btn.textContent = "Set PIN & unlock";
+      }
+    }
+
+    function unlockApp() {
+      document.getElementById("lockScreen").classList.add("d-none");
+      document.getElementById("appMain").classList.remove("d-none");
+      initEmrApp();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      configureLockScreen();
+
+      document.getElementById("lockBtn").addEventListener("click", () => {
+        const pinInput = document.getElementById("lockPinInput").value.trim();
+        const errorEl = document.getElementById("lockError");
+        errorEl.textContent = "";
+
+        if (!existingPin) {
+          const pinConfirm = document
+            .getElementById("lockPinConfirm")
+            .value.trim();
+          if (pinInput.length < 4 || pinInput.length > 8 || !/^\d+$/.test(pinInput)) {
+            errorEl.textContent =
+              "Please choose a 4–8 digit numeric PIN.";
+            return;
+          }
+          if (pinInput !== pinConfirm) {
+            errorEl.textContent = "PIN and confirmation do not match.";
+            return;
+          }
+          localStorage.setItem(PIN_KEY, pinInput);
+          existingPin = pinInput;
+          unlockApp();
+        } else {
+          if (pinInput === existingPin) {
+            unlockApp();
+          } else {
+            errorEl.textContent = "Incorrect PIN. Try again.";
+          }
+        }
+      });
+    });
+  </script>
+
+<script>
+/* === MASTER JSON COMPATIBILITY LAYER (Non-Destructive Injection) === */
+
+async function loadMasterJSONCompatible() {
+    try {
+        const response = await fetch("Pediatric_GI_Master_COMPLETE.json");
+        const master = await response.json();
+
+        // Transform master JSON into patient-based structure
+        const patientMap = {};
+
+        master.forEach(period => {
+            if (!period.Encounters) return;
+
+            period.Encounters.forEach(enc => {
+                const template = enc["Comprehensive Pediatric GI Encounter Template"];
+                if (!template) return;
+
+                const info = template["1. Encounter Information"];
+                if (!info) return;
+
+                const name = info["Patient Name"] || "Unknown Patient";
+                const dob = info["DOB / Age"] || "";
+                const key = name + "__" + dob;
+
+                if (!patientMap[key]) {
+                    patientMap[key] = {
+                        name: name,
+                        dob: dob,
+                        visits: []
+                    };
+                }
+
+                patientMap[key].visits.push({
+                    encounterId: enc.EncounterID || "",
+                    date: info["Date / Time"] || "",
+                    visitType: info["Visit Type"] || "",
+                    full: template
+                });
+            });
+        });
+
+        // Expose globally (override existing datasets safely)
+        window.masterPatients = Object.values(patientMap);
+
+        if (typeof renderPatients === "function") {
+            renderPatients(window.masterPatients);
+        }
+
+        console.log("Master JSON loaded and transformed successfully.");
+    } catch (e) {
+        console.error("Failed loading Master JSON:", e);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    loadMasterJSONCompatible();
+});
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
